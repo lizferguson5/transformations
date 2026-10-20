@@ -170,10 +170,15 @@ ul.small{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:3px}
 .sw-result{background:var(--surface);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;animation:pop .4s ease-out}
 .sw-nums{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 @keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 .pcard{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;background:var(--surface);min-width:0}
 .pcard.ok{border-color:var(--good);background:var(--good-soft)}
-.pcard .ph{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;gap:8px}
+.pcard .ph{font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap}
+.pcard .pv{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+.pcard .pv .k{font-size:.8rem;font-weight:700;color:var(--muted)}
+.pcard .pv .mono{font-size:1.45rem;font-weight:600;color:var(--ink)}
+.pcard .pv .u{font-size:.9rem;color:var(--muted)}
+.pcard .keys{flex-wrap:nowrap}
 .pcard .kc{min-width:22px;padding:1px 5px;font-size:.78rem}
 .qrow{display:flex;gap:6px;align-items:center}
 .qrow input.ans{flex:1;min-width:0;width:auto}
@@ -196,14 +201,14 @@ ul.small{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:3px}
 .qa{display:flex;flex-direction:column;gap:6px}
 .qa label{font-size:.9rem}
 .chart .hbin{fill:var(--line);opacity:.55}
-.chart .pdot{fill:var(--ink);opacity:.8}
-.chart .pdot.lnd{fill:var(--ln);opacity:.9}
+.chart .pdot{fill:var(--ink);fill-opacity:.8}
+.chart .pdot.lnd{fill:var(--ln);fill-opacity:.9}
 .chart .gdot{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:2 2;opacity:.7}
-.chart .link{stroke:var(--muted);stroke-width:1;opacity:.5}
-.chart .link.faint{opacity:.22}
+.chart .link{stroke:var(--muted);stroke-width:1;stroke-opacity:.5}
+.chart .link.faint{stroke-opacity:.22}
 .chart .mapmean{stroke:var(--accent);stroke-width:3.5}
 .chart .mapci{stroke:var(--accent);stroke-width:1.8;stroke-dasharray:5 3}
-.chart .ciband{fill:var(--accent);opacity:.25}
+.chart .ciband{fill:var(--accent);fill-opacity:.25}
 .chart .gmk{fill:var(--accent);stroke:var(--surface);stroke-width:2}
 .chart .amk{fill:var(--exp);stroke:var(--surface);stroke-width:2}
 .chart text.acc{fill:var(--accent);font-weight:600}
@@ -220,6 +225,30 @@ ul.small{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:3px}
 .chart .ptlab{font-size:11px;fill:var(--muted)}
 .chart .dotlab{fill:var(--c);font-weight:600}
 td.before{color:var(--muted)}
+.anim-ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.anim-ctl button:disabled{opacity:.45;cursor:default}
+ol.stages{margin:0;padding:0;list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:6px}
+ol.stages li{counter-increment:st;display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:8px;color:var(--muted);cursor:pointer;border:1px solid transparent;font-size:.93rem}
+ol.stages li::before{content:counter(st);font-family:var(--f-mono);font-weight:600;font-size:.8rem;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:var(--sunk);color:var(--muted);flex:none}
+ol.stages li.done{color:var(--ink)}
+ol.stages li.now{color:var(--ink);background:var(--accent-soft);border-color:var(--accent)}
+ol.stages li.now::before,ol.stages li.done::before{background:var(--accent);color:var(--accent-ink)}
+.chart .hiring{fill:none;stroke:var(--exp);stroke-width:2.5}
+.chart .pdot.p12{fill:var(--exp);fill-opacity:1}
+.lanes{display:grid;grid-template-columns:minmax(0,1.3fr) auto minmax(0,1fr);gap:10px;align-items:stretch}
+.lane{border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--sunk);min-width:0}
+.lane .scale{margin-left:0;align-self:flex-start}
+.lane:first-child{background:var(--ln-soft)}
+.lane:last-child{background:var(--exp-soft)}
+.lane-arrow{align-self:center;font-family:var(--f-mono);font-weight:700;color:var(--muted);white-space:nowrap}
+.formulas{border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.formulas h4{margin:0;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.fgrid>div{display:flex;flex-direction:column;gap:2px}
+.fl{font-size:.8rem;color:var(--muted);font-weight:700}
+.fm{font-family:var(--f-mono);font-size:1.02rem;font-weight:600}
+.fx{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);background:var(--surface);border-radius:6px;padding:2px 8px;align-self:flex-start}
+@media (max-width:760px){ .lanes{grid-template-columns:minmax(0,1fr)} .lane-arrow{justify-self:center;transform:rotate(90deg)} }
 .rule{background:var(--cs,var(--accent-soft));border-radius:8px;padding:9px 13px;font-size:.93rem;max-width:72ch}
 .dp{display:inline-block;margin-left:6px;font-size:.7rem;letter-spacing:0;text-transform:none;background:var(--cs,var(--accent-soft));color:var(--c,var(--accent));padding:1px 7px;border-radius:999px;font-weight:700}
 .legend i.lg-x{width:9px;height:9px;border:2px solid var(--c);background:var(--surface);transform:rotate(45deg);border-radius:1px}
@@ -687,27 +716,37 @@ button.calc-fab,button.calc-close{display:none}
       </div>
       <div class="col">
         <div class="chartbox"><svg class="chart" id="g-means" viewBox="0 0 340 200" role="img" aria-label="Raw CRP values with arithmetic and geometric means marked"></svg></div>
-        <div class="legend"><span><i style="background:var(--exp)"></i>Arithmetic mean 4.22</span><span><i style="background:var(--accent)"></i>Geometric mean 2.36</span></div>
+        <div class="legend"><span><i style="background:var(--exp)"></i>Arithmetic mean 4.22</span><span id="lg-gm"><i style="background:var(--accent)"></i>Geometric mean (appears once you calculate it)</span></div>
       </div>
     </div>
 
     <div class="why">
       <h3>Why is the geometric mean smaller than the arithmetic mean?</h3>
-      <div class="chartbox"><svg class="chart map" id="g-map" viewBox="0 0 560 250" role="img" aria-label="Each patient's ln value on a top scale, connected to its mg/L value on a bottom scale"></svg></div>
-      <div class="cols3">
-        <div class="mini"><h3>1 · Top line</h3><p>Each patient's ln(CRP). On this scale the dots are evenly spread. The highest patient (18.5 mg/L) is only 2.92, not far from everyone else.</p></div>
-        <div class="mini"><h3>2 · Grey lines</h3><p>eˣ carries each value back down to mg/L. The lines fan out to the right: eˣ stretches the high values far apart.</p></div>
-        <div class="mini"><h3>3 · Thick line</h3><p>The average on the ln scale (0.857) comes down to <b>2.36 mg/L</b>. The arithmetic mean (4.22) is higher because in mg/L the two high patients pull hard on it.</p></div>
+      <p class="small">Press <b>Play</b> to watch the back-transformation happen, or use Back and Next to go one stage at a time.</p>
+      <div class="chartbox"><svg class="chart map" id="g-map" viewBox="0 0 560 250" role="img" aria-label="Animated diagram: ln values on a top scale carried down to mg/L on a bottom scale"></svg></div>
+      <div class="anim-ctl" id="ctl-map">
+        <button class="btn primary" type="button" data-a="play">▶ Play</button>
+        <button class="btn small" type="button" data-a="back">◀ Back</button>
+        <button class="btn small" type="button" data-a="next">Next ▶</button>
+        <span class="small" data-a="count"></span>
       </div>
+      <ol class="stages" id="st-map">
+        <li>Start with the 12 ln(CRP) values from Step 2, on the log scale.</li>
+        <li>Average them on the log scale: mean = 0.857 (Step 3).</li>
+        <li>eˣ carries each patient back down to mg/L. Watch the lines fan out: eˣ stretches the high values far apart.</li>
+        <li>eˣ of the log-scale mean lands at 2.36 mg/L. That is the geometric mean (Step 4).</li>
+        <li>The ordinary average of the mg/L values is 4.22. The two high patients (circled), now stretched far to the right, pull it up.</li>
+      </ol>
       <div class="mini-ex">
-        <h3>Try it with three patients</h3>
-        <p class="small">CRP values of 1, 10 and <b class="mono" id="mx-v">100</b> mg/L. Drag the slider to change the highest patient.</p>
-        <input type="range" id="mx" min="20" max="40" step="1" value="20" aria-label="CRP of the highest patient">
+        <h3>Try it: change one patient</h3>
+        <p class="small">These are the 12 patients from this lab. Drag the slider to change <b>patient 12</b> (now <b class="mono" id="mx-v">18.5</b> mg/L) and watch what happens to each mean.</p>
+        <input type="range" id="mx" min="0" max="2.3" step="0.001" value="1.2672" aria-label="CRP of patient 12">
+        <div class="chartbox"><svg class="chart" id="g-mx" viewBox="0 0 560 120" role="img" aria-label="The 12 patients with both means marked"></svg></div>
         <div class="mx-cols">
           <div class="mx am"><span class="k">Arithmetic mean</span><span class="mono" id="mx-am"></span><span class="mono small" id="mx-amw"></span></div>
-          <div class="mx gm"><span class="k">Geometric mean (via logs)</span><span class="mono" id="mx-gm"></span><span class="mono small" id="mx-gmw"></span></div>
+          <div class="mx gm"><span class="k">Geometric mean</span><span class="mono" id="mx-gm"></span><span class="mono small" id="mx-gmw"></span></div>
         </div>
-        <p class="small">As the highest value grows, the arithmetic mean races upward but the geometric mean barely moves. (This example uses log₁₀ for easy numbers; ln works exactly the same way.)</p>
+        <p class="small" id="mx-note"></p>
       </div>
       <p class="rule"><b>Key idea:</b> back-transforming the mean of the logs does not give back the ordinary mean. It gives the <b>geometric mean</b>, a typical value that one or two very high patients can't drag upward.</p>
       <details><summary style="cursor:pointer;font-weight:700">For the curious: another way to get the geometric mean</summary>
@@ -719,36 +758,52 @@ button.calc-fab,button.calc-close{display:none}
   <!-- Step 5 -->
   <div class="block" id="lab-s5">
     <div class="step-h"><span class="step-n">Step 5</span><h3>Confidence interval: calculate on the log scale, then back-transform the limits</h3><span class="scale both">ln → mg/L</span></div>
-    <p class="prose">The rule: do all the CI maths with the <b>ln values</b>, and only back-transform the two final limits. Work left to right.</p>
+    <div class="lanes">
+      <div class="lane"><span class="scale ln">log scale</span><b>① and ② use the transformed data</b><p class="small">The mean, SD, SE and both limits all come from the <b>ln(CRP)</b> values. Never use the raw mg/L numbers here.</p></div>
+      <div class="lane-arrow" aria-hidden="true">eˣ →</div>
+      <div class="lane"><span class="scale raw">mg/L</span><b>③ Back-transform only at the very end</b><p class="small">Turn the two finished limits back into mg/L with eˣ.</p></div>
+    </div>
+    <div class="formulas">
+      <h4>Formula reminders</h4>
+      <div class="fgrid">
+        <div><span class="fl">Standard error</span><span class="fm">SE = SD ÷ √n</span></div>
+        <div><span class="fl">95% confidence limits</span><span class="fm">mean ± t* × SE</span></div>
+        <div><span class="fl">Degrees of freedom</span><span class="fm">df = n − 1 = 11</span></div>
+        <div><span class="fl">Back-transform each limit</span><span class="fm">limit (mg/L) = e^(limit)</span></div>
+      </div>
+    </div>
+    <p class="small"><b>Use these numbers.</b> They all come from the ln(CRP) column you made in Step 2.</p>
     <div class="givens">
       <div><span class="k">Mean of ln(CRP)</span><span class="v">0.8571</span><span class="small">from Step 3</span></div>
-      <div><span class="k">SD of ln(CRP)</span><span class="v">1.1205</span><span class="small">given · <code>=STDEV.S()</code></span></div>
+      <div><span class="k">SD of ln(CRP)</span><span class="v">1.1205</span><span class="small">given · <code>=STDEV.S(C2:C13)</code></span></div>
+      <div><span class="k">n</span><span class="v">12</span><span class="small">patients</span></div>
       <div><span class="k">t* (95%, df = 11)</span><span class="v">2.201</span><span class="small">from the t-table</span></div>
     </div>
+    <div class="callout warn"><p style="font-size:.93rem"><b>Not these:</b> the raw mean (4.2167) and raw SD (5.2457) describe the skewed mg/L data. Using them gives the wrong interval.</p></div>
     <div class="flow">
       <div class="fcol">
         <div class="cmp-h"><b>① Standard error</b><span class="scale ln">log scale</span></div>
-        <div class="qa"><label for="a-se"><b>a.</b> SE = <span class="mono">1.1205 ÷ √12</span></label>
+        <div class="qa"><span class="fx">SE = SD ÷ √n</span><label for="a-se"><b>a.</b> SE = <span class="mono">1.1205 ÷ √12</span></label>
           <div class="qrow"><input class="ans" id="a-se" inputmode="decimal" autocomplete="off" data-label="a. SE"><button class="btn small" type="button" data-play="1 . 1 2 0 5 / sqrt 1 2 ) =">▶ Show me</button></div>
           <span class="fb" id="f-se"></span></div>
       </div>
       <div class="farrow" aria-hidden="true">→</div>
       <div class="fcol">
         <div class="cmp-h"><b>② Limits</b><span class="scale ln">log scale</span></div>
-        <div class="qa"><label for="a-lo"><b>b.</b> Lower = <span class="mono">0.8571 − 2.201 × SE</span></label>
+        <div class="qa"><span class="fx">lower = mean − t* × SE</span><label for="a-lo"><b>b.</b> Lower = <span class="mono">0.8571 − 2.201 × SE</span></label>
           <div class="qrow"><input class="ans" id="a-lo" inputmode="decimal" autocomplete="off" data-label="b. Lower limit (ln)"><button class="btn small" type="button" data-play="0 . 8 5 7 1 - 2 . 2 0 1 * 0 . 3 2 3 5 =">▶ Show me</button></div>
           <span class="fb" id="f-lo"></span></div>
-        <div class="qa"><label for="a-hi"><b>c.</b> Upper = <span class="mono">0.8571 + 2.201 × SE</span></label>
+        <div class="qa"><span class="fx">upper = mean + t* × SE</span><label for="a-hi"><b>c.</b> Upper = <span class="mono">0.8571 + 2.201 × SE</span></label>
           <div class="qrow"><input class="ans" id="a-hi" inputmode="decimal" autocomplete="off" data-label="c. Upper limit (ln)"><button class="btn small" type="button" data-play="0 . 8 5 7 1 + 2 . 2 0 1 * 0 . 3 2 3 5 =">▶ Show me</button></div>
           <span class="fb" id="f-hi"></span></div>
       </div>
       <div class="farrow" aria-hidden="true">eˣ →</div>
       <div class="fcol">
         <div class="cmp-h"><b>③ Back-transform</b><span class="scale raw">mg/L</span></div>
-        <div class="qa"><label for="a-elo"><b>d.</b> Lower = <span class="mono">e^(lower)</span></label>
+        <div class="qa"><span class="fx">e^(lower limit from b)</span><label for="a-elo"><b>d.</b> Lower = <span class="mono">e^(lower)</span></label>
           <div class="qrow"><input class="ans" id="a-elo" inputmode="decimal" autocomplete="off" data-label="d. Lower limit (mg/L)"><button class="btn small" type="button" data-play="ex 0 . 1 4 5 1 ) =">▶ Show me</button></div>
           <span class="fb" id="f-elo"></span></div>
-        <div class="qa"><label for="a-ehi"><b>e.</b> Upper = <span class="mono">e^(upper)</span></label>
+        <div class="qa"><span class="fx">e^(upper limit from c)</span><label for="a-ehi"><b>e.</b> Upper = <span class="mono">e^(upper)</span></label>
           <div class="qrow"><input class="ans" id="a-ehi" inputmode="decimal" autocomplete="off" data-label="e. Upper limit (mg/L)"><button class="btn small" type="button" data-play="ex 1 . 5 6 9 1 ) =">▶ Show me</button></div>
           <span class="fb" id="f-ehi"></span></div>
       </div>
@@ -758,8 +813,20 @@ button.calc-fab,button.calc-close{display:none}
 
     <div class="why">
       <h3>Why is the interval lopsided in mg/L?</h3>
-      <div class="chartbox"><svg class="chart map" id="g-map-ci" viewBox="0 0 560 250" role="img" aria-label="The confidence interval on the ln scale mapped down to the mg/L scale"></svg></div>
-      <p class="prose">On the ln scale (top) the interval is the same size on both sides of the mean: ± 0.71. eˣ stretches bigger values more than smaller ones, so after back-transforming the upper side stretches to <b>2.45 mg/L</b> above the geometric mean while the lower side is only <b>1.20 mg/L</b> below it. Back-transformed intervals are always lopsided like this, and they can never go below 0.</p>
+      <p class="small">Press <b>Play</b> to watch the interval get built on the log scale and then back-transformed.</p>
+      <div class="chartbox"><svg class="chart map" id="g-map-ci" viewBox="0 0 560 250" role="img" aria-label="Animated diagram: the confidence interval on the ln scale mapped down to the mg/L scale"></svg></div>
+      <div class="anim-ctl" id="ctl-ci">
+        <button class="btn primary" type="button" data-a="play">▶ Play</button>
+        <button class="btn small" type="button" data-a="back">◀ Back</button>
+        <button class="btn small" type="button" data-a="next">Next ▶</button>
+        <span class="small" data-a="count"></span>
+      </div>
+      <ol class="stages" id="st-ci">
+        <li>On the log scale: the 12 ln(CRP) values and their mean, 0.857.</li>
+        <li>Build the 95% CI on the log scale: 0.857 ± 2.201 × 0.3235 = 0.857 ± 0.71. Same distance on both sides.</li>
+        <li>Back-transform the two limits with eˣ: e<sup>0.145</sup> = 1.16 and e<sup>1.569</sup> = 4.80 mg/L. The mean comes down too: e<sup>0.857</sup> = 2.36.</li>
+        <li>In mg/L the interval is lopsided: 1.20 below the geometric mean but 2.45 above. eˣ stretches the upper side more, and the lower limit can never go below 0.</li>
+      </ol>
     </div>
     <div class="callout warn">
       <b>Common mistake: back-transforming the standard error</b>
@@ -771,7 +838,7 @@ button.calc-fab,button.calc-close{display:none}
     <span class="tag">Things to try</span>
     <ul>
       <li>Compare both means with the risk groups (below 1, 1 to 3, above 3 mg/L). Which group does each one put a "typical" patient in? Which mean describes this group better?</li>
-      <li>In "Try it with three patients", drag the highest value all the way up. Which mean changes more, and why?</li>
+      <li>In "Try it: change one patient", drag patient 12 all the way up, then all the way down. Which mean changes more, and why?</li>
       <li>Calculate e<sup>0.3235</sup> (the SE back-transformed). Why doesn't that number make sense in mg/L?</li>
       <li>Look at the interval diagram. Why does the interval stretch further above the geometric mean than below it?</li>
     </ul>
@@ -1165,14 +1232,19 @@ function dotHist(svg,vals,o){
   const stack=(list,cls)=>{const cnt=new Array(nb).fill(0);list.forEach(v=>{const b=bin(v);el('circle',{cx:m.l+bp*(b+.5),cy:base-r-3-cnt[b]*sz,r,class:cls},svg);cnt[b]++;});};
   if(o.ghost)stack(o.ghost,'gdot');
   stack(vals,o.dcls||'pdot');
-  (o.lines||[]).forEach(L=>{el('line',{x1:sx(L.v),x2:sx(L.v),y1:18,y2:base,class:'meanline '+L.cls},svg);const t=el('text',{x:sx(L.v)+5,y:L.row?46:28,class:L.cls,style:'stroke:none;font-weight:600'},svg);t.textContent=L.label;});
+  const lx=Math.max(...(o.lines||[]).map(L=>sx(L.v)),0)+6;
+  (o.lines||[]).forEach(L=>{el('line',{x1:sx(L.v),x2:sx(L.v),y1:18,y2:base,class:'meanline '+L.cls},svg);const t=el('text',{x:lx,y:L.row?46:28,class:L.cls,style:'stroke:none;font-weight:600'},svg);t.textContent=L.label;});
 }
 const RAWH={lo:0,hi:20,bw:2,ticks:[0,4,8,12,16,20],unit:'CRP (mg/L)'};
 const LNH={lo:-1.25,hi:3.25,bw:0.75,ticks:[-1,0,1,2,3],unit:'ln(CRP)'};
 dotHist(document.getElementById('g-raw'),CRP,{...RAWH,lines:[{v:AM,cls:'am',label:'arithmetic mean 4.22'}]});
 dotHist(document.getElementById('g-cmp-raw'),CRP,RAWH);
 document.getElementById('sw-before-2').innerHTML=swHTML('before');
-dotHist(document.getElementById('g-means'),CRP,{...RAWH,lines:[{v:GM,cls:'gm',label:'geometric 2.36',row:1},{v:AM,cls:'am',label:'arithmetic 4.22'}]});
+function drawMeans(showGM){
+  dotHist(document.getElementById('g-means'),CRP,{...RAWH,lines:showGM?[{v:GM,cls:'gm',label:'geometric 2.36',row:1},{v:AM,cls:'am',label:'arithmetic 4.22'}]:[{v:AM,cls:'am',label:'arithmetic 4.22'}]});
+  document.getElementById('lg-gm').innerHTML='<i style="background:var(--accent)"></i>'+(showGM?'Geometric mean 2.36':'Geometric mean (appears once you calculate it)');
+}
+drawMeans(false);
 document.getElementById('sw-before-btn').addEventListener('click',e=>{const box=document.getElementById('sw-before');box.innerHTML=swHTML('before');box.hidden=false;e.target.textContent='Test run on raw CRP';e.target.disabled=true;labState.sw=true;routeUpdate();});
 document.getElementById('sw-after-btn').addEventListener('click',e=>{const box=document.getElementById('sw-after');box.innerHTML=swHTML('after');box.hidden=false;e.target.textContent='Test run on ln(CRP)';e.target.disabled=true;});
 
@@ -1181,7 +1253,8 @@ document.getElementById('w-am').textContent=`(${CRP.join(' + ')}) ÷ 12\n= ${+CR
 /* patient cards */
 const labAns=[];
 document.getElementById('pgrid').innerHTML=CRP.map((v,i)=>{const seq='ln '+digitsOf(v.toFixed(1))+' ) =';return `<div class="pcard" id="pc-${i}">
-  <div class="ph"><span>Patient ${i+1}</span><span class="mono">${v.toFixed(1)} mg/L</span></div>
+  <div class="ph">Patient ${i+1}</div>
+  <div class="pv"><span class="k">CRP</span><span class="mono">${v.toFixed(1)}</span><span class="u">mg/L</span></div>
   <span class="keys">${keycaps(seq)}</span>
   <div class="qrow"><input class="ans" id="in-lab-${i}" inputmode="decimal" autocomplete="off" data-label="ln(CRP), patient ${i+1}"><button class="btn small" type="button" data-play="${seq}" aria-label="Show me patient ${i+1}">▶</button></div>
   <div class="fb" id="fb-lab-${i}"></div></div>`;}).join('');
@@ -1216,14 +1289,14 @@ document.getElementById('play-gm').addEventListener('click',()=>play('ex '+digit
 const prod=CRP.reduce((a,b)=>a*b,1);
 document.getElementById('w-gm2').textContent=`Multiply all 12 values together, then take the 12th root:\n(${CRP.join(' × ')})^(1/12)\n= ${prod.toFixed(1)}^(1/12)\n= ${f4(prod**(1/12))} mg/L\n\nSame answer as e^(mean of ln values). That is why it's called the GEOMETRIC mean:\nit averages by multiplying, which suits values that vary by "times as much".`;
 
-const single=(id,truth,wrongs)=>{const inp=document.getElementById('a-'+id),fb=document.getElementById('f-'+id);inp.addEventListener('input',()=>{const r=judge(parseNum(inp.value),truth,wrongs,inp.value);setFb(fb,r);labState[id]=!!(r&&r.ok);routeUpdate();});};
+const single=(id,truth,wrongs,cb)=>{const inp=document.getElementById('a-'+id),fb=document.getElementById('f-'+id);inp.addEventListener('input',()=>{const r=judge(parseNum(inp.value),truth,wrongs,inp.value);setFb(fb,r);labState[id]=!!(r&&r.ok);routeUpdate();if(cb)cb(labState[id]);});};
 single('lnmean',LNM,[{v:AM,msg:'That is the arithmetic mean of the raw CRP values. Average the ln values instead.'},{v:Math.log(AM),msg:'That is ln of the raw mean. Take ln of each value first, then average those.'},{v:LNV.reduce((a,b)=>a+b,0),msg:'That is the sum. Now divide by 12.'}]);
-single('gm',GM,[{v:10**LNM,msg:'That used 10ˣ. The data were transformed with ln, so undo it with eˣ.'},{v:Math.E*LNM,msg:'That is e × mean. You need e raised to the power of the mean: press eˣ.'},{v:AM,msg:'That is the arithmetic mean. Back-transform the log-scale mean with eˣ.'}]);
-single('se',SE,[{v:1.1205/12,msg:'You divided by 12. Divide by the square root of 12 (√12 = 3.4641).'},{v:1.1205/Math.sqrt(11),msg:'Use √n = √12, not √11.'}]);
-single('lo',LO,[{v:(0.8571-TSTAR)*0.3235,msg:'Order of operations: multiply 2.201 × SE first, then subtract from the mean.'},{v:0.8571-0.3235,msg:'You subtracted just the SE. Multiply it by t* = 2.201 first.'}]);
-single('hi',HI,[{v:(0.8571+TSTAR)*0.3235,msg:'Order of operations: multiply 2.201 × SE first, then add to the mean.'},{v:0.8571+0.3235,msg:'You added just the SE. Multiply it by t* = 2.201 first.'}]);
-single('elo',Math.exp(LO),[{v:10**LO,msg:'Use eˣ, not 10ˣ.'},{v:GM-TSTAR*Math.exp(0.3235),msg:'That back-transformed the SE. Back-transform the lower limit from b instead.'}]);
-single('ehi',Math.exp(HI),[{v:10**HI,msg:'Use eˣ, not 10ˣ.'},{v:GM+TSTAR*Math.exp(0.3235),msg:'That back-transformed the SE. Back-transform the upper limit from c instead.'}]);
+single('gm',GM,[{v:10**LNM,msg:'That used 10ˣ. The data were transformed with ln, so undo it with eˣ.'},{v:Math.E*LNM,msg:'That is e × mean. You need e raised to the power of the mean: press eˣ.'},{v:AM,msg:'That is the arithmetic mean. Back-transform the log-scale mean with eˣ.'}],drawMeans);
+single('se',SE,[{v:1.1205/12,msg:'You divided by 12. Divide by the square root of 12 (√12 = 3.4641).'},{v:1.1205/Math.sqrt(11),msg:'Use √n = √12, not √11.'},{v:5.2457/Math.sqrt(12),msg:'That used the SD of the raw CRP values (5.2457). The CI is built on the transformed data, so use the SD of ln(CRP): 1.1205.'}]);
+single('lo',LO,[{v:(0.8571-TSTAR)*0.3235,msg:'Order of operations: multiply 2.201 × SE first, then subtract from the mean.'},{v:0.8571-0.3235,msg:'You subtracted just the SE. Multiply it by t* = 2.201 first.'},{v:AM-TSTAR*0.3235,msg:'That used the raw mean (4.2167). Stay on the log scale: use the mean of ln(CRP), 0.8571.'},{v:AM-TSTAR*5.2457/Math.sqrt(12),msg:'That used the raw mean and raw SD. Stay on the log scale: mean 0.8571, SE 0.3235.'},{v:0.8571-TSTAR*5.2457/Math.sqrt(12),msg:'That SE came from the raw SD. Use SE = 1.1205 ÷ √12 = 0.3235.'}]);
+single('hi',HI,[{v:(0.8571+TSTAR)*0.3235,msg:'Order of operations: multiply 2.201 × SE first, then add to the mean.'},{v:0.8571+0.3235,msg:'You added just the SE. Multiply it by t* = 2.201 first.'},{v:AM+TSTAR*0.3235,msg:'That used the raw mean (4.2167). Stay on the log scale: use the mean of ln(CRP), 0.8571.'},{v:AM+TSTAR*5.2457/Math.sqrt(12),msg:'That used the raw mean and raw SD. Stay on the log scale: mean 0.8571, SE 0.3235.'},{v:0.8571+TSTAR*5.2457/Math.sqrt(12),msg:'That SE came from the raw SD. Use SE = 1.1205 ÷ √12 = 0.3235.'}]);
+single('elo',Math.exp(LO),[{v:LO,msg:'That is still on the log scale (your answer to b). Now back-transform it: press eˣ, then type it.'},{v:10**LO,msg:'Use eˣ, not 10ˣ.'},{v:GM-TSTAR*Math.exp(0.3235),msg:'That back-transformed the SE. Back-transform the lower limit from b instead.'}]);
+single('ehi',Math.exp(HI),[{v:HI,msg:'That is still on the log scale (your answer to c). Now back-transform it: press eˣ, then type it.'},{v:10**HI,msg:'Use eˣ, not 10ˣ.'},{v:GM+TSTAR*Math.exp(0.3235),msg:'That back-transformed the SE. Back-transform the upper limit from c instead.'}]);
 document.getElementById('w-ci').textContent=
 `a. SE  = SD ÷ √n = 1.1205 ÷ √12 = 1.1205 ÷ 3.4641 = ${f4(SE)}
 b. Lower (ln) = 0.8571 − 2.201 × 0.3235 = 0.8571 − 0.7120 = ${f4(LO)}
@@ -1235,50 +1308,104 @@ e. Upper (mg/L) = e^${f4(HI)} = ${f4(Math.exp(HI))}
 Distance below the geometric mean: ${GM.toFixed(2)} − ${Math.exp(LO).toFixed(2)} = ${(GM-Math.exp(LO)).toFixed(2)}
 Distance above the geometric mean: ${Math.exp(HI).toFixed(2)} − ${GM.toFixed(2)} = ${(Math.exp(HI)-GM).toFixed(2)}`.replace(/-(?=\d)/g,'−');
 
-/* two-scale map: ln scale on top, mg/L underneath, each patient joined by a line */
-function mapDiagram(svg,ci){
-  svg.innerHTML='';
+/* animated two-scale map (ln scale on top, mg/L below) with Play / Back / Next */
+function makeMap(svg,ctl,list,mode){
   const W=560,H=250,l=28,r=28,pw=W-l-r,yT=66,yB=176;
   const tx=v=>l+(v+1.5)/5*pw, bx=v=>l+v/20*pw;
-  const T=(x,y,s,cls,anchor)=>{const t=el('text',{x,y,'text-anchor':anchor||'start',class:cls||''},svg);t.textContent=s;return t;};
-  T(l,16,'ln(CRP), the log scale: where we do the maths','axl lnt');
-  T(l,H-4,'CRP in mg/L: what we report','axl');
+  const reduced=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  svg.innerHTML='';
+  const T=(x,y,s,cls,anchor,parent)=>{const t=el('text',{x,y,'text-anchor':anchor||'start',class:cls||''},parent||svg);t.textContent=s;return t;};
+  T(l,16,'ln(CRP), the log scale: where we do the maths','axl lnt'); T(l,H-4,'CRP in mg/L: what we report','axl');
   el('line',{x1:l,x2:W-r,y1:yT,y2:yT,class:'axis'},svg); el('line',{x1:l,x2:W-r,y1:yB,y2:yB,class:'axis'},svg);
   [-1,0,1,2,3].forEach(t=>{el('line',{x1:tx(t),x2:tx(t),y1:yT-5,y2:yT,class:'axis'},svg);T(tx(t),yT-9,tickFmt(t),'','middle');});
   [0,5,10,15,20].forEach(t=>{el('line',{x1:bx(t),x2:bx(t),y1:yB,y2:yB+5,class:'axis'},svg);T(bx(t),yB+18,String(t),'','middle');});
-  CRP.forEach((v,i)=>el('line',{x1:tx(LNV[i]),y1:yT,x2:bx(v),y2:yB,class:'link'+(ci?' faint':'')},svg));
-  if(ci){
-    const eLo=Math.exp(LO),eHi=Math.exp(HI);
-    el('rect',{x:tx(LO),y:yT-7,width:tx(HI)-tx(LO),height:14,rx:3,class:'ciband'},svg);
-    el('rect',{x:bx(eLo),y:yB-7,width:bx(eHi)-bx(eLo),height:14,rx:3,class:'ciband'},svg);
-    el('line',{x1:tx(LO),y1:yT,x2:bx(eLo),y2:yB,class:'mapci'},svg); el('line',{x1:tx(HI),y1:yT,x2:bx(eHi),y2:yB,class:'mapci'},svg);
-    T(tx(LNM),26,'mean 0.857','acc','middle');
-    T((tx(LO)+tx(LNM))/2,yT-22,'−0.71','acc','middle'); T((tx(HI)+tx(LNM))/2,yT-22,'+0.71','acc','middle');
-    T(bx(eLo)-3,yB+34,eLo.toFixed(2),'acc','end'); T(bx(GM),yB+34,GM.toFixed(2),'acc','middle'); T(bx(eHi)+3,yB+34,eHi.toFixed(2),'acc','start');
-    T(bx(GM)-4,yB+52,(GM-eLo).toFixed(2)+' below','acc','end'); T(bx(GM)+4,yB+52,(eHi-GM).toFixed(2)+' above','acc','start');
+  const gBand=el('g',{},svg), gLinks=el('g',{},svg), gDots=el('g',{},svg), gLab=el('g',{},svg);
+  const op=(e,v)=>{e.style.opacity=v;};
+  const grow=(ln,x1,y1,x2,y2,k)=>{ln.setAttribute('x2',x1+(x2-x1)*k);ln.setAttribute('y2',y1+(y2-y1)*k);};
+  const E={};
+  E.links=CRP.map((v,i)=>el('line',{x1:tx(LNV[i]),y1:yT,x2:tx(LNV[i]),y2:yT,class:'link'},gLinks));
+  E.bots=CRP.map(v=>el('circle',{cx:bx(v),cy:yB,r:4.5,class:'pdot'},gDots));
+  CRP.forEach((v,i)=>el('circle',{cx:tx(LNV[i]),cy:yT,r:4.5,class:'pdot lnd'},gDots));
+  E.meanLine=el('line',{x1:tx(LNM),y1:yT,x2:tx(LNM),y2:yT,class:'mapmean'},gLinks);
+  E.meanTop=el('circle',{cx:tx(LNM),cy:yT,r:7,class:'gmk'},gDots);
+  E.meanBot=el('circle',{cx:bx(GM),cy:yB,r:7,class:'gmk'},gDots);
+  E.meanTopLbl=T(tx(LNM),30,mode==='ci'?'mean 0.857':'mean of ln values = 0.857','acc','middle',gLab);
+  const eLo=Math.exp(LO),eHi=Math.exp(HI);
+  if(mode==='back'){
+    E.gmLbl=T(bx(GM)-6,yB+34,'eˣ → 2.36 geometric mean','acc','start',gLab);
+    E.am=el('rect',{x:bx(AM)-6,y:yB-6,width:12,height:12,transform:`rotate(45 ${bx(AM)} ${yB})`,class:'amk'},gDots);
+    E.amLbl=T(bx(AM)-6,yB+52,'4.22 arithmetic mean','amt','start',gLab);
+    E.rings=[9.8,18.5].map(v=>el('circle',{cx:bx(v),cy:yB,r:10,class:'hiring'},gDots));
+  } else {
+    E.bandT=el('rect',{x:tx(LNM),y:yT-7,width:0,height:14,rx:3,class:'ciband'},gBand);
+    E.bandB=el('rect',{x:bx(eLo),y:yB-7,width:bx(eHi)-bx(eLo),height:14,rx:3,class:'ciband'},gBand);
+    E.loLine=el('line',{x1:tx(LO),y1:yT,x2:tx(LO),y2:yT,class:'mapci'},gLinks);
+    E.hiLine=el('line',{x1:tx(HI),y1:yT,x2:tx(HI),y2:yT,class:'mapci'},gLinks);
+    E.pm=[T((tx(LO)+tx(LNM))/2,yT-22,'−0.71','acc','middle',gLab),T((tx(HI)+tx(LNM))/2,yT-22,'+0.71','acc','middle',gLab)];
+    E.vals=[T(bx(eLo)-3,yB+34,eLo.toFixed(2),'acc','end',gLab),T(bx(GM),yB+34,GM.toFixed(2),'acc','middle',gLab),T(bx(eHi)+3,yB+34,eHi.toFixed(2),'acc','start',gLab)];
+    E.dist=[T(bx(GM)-4,yB+52,(GM-eLo).toFixed(2)+' below','acc','end',gLab),T(bx(GM)+4,yB+52,(eHi-GM).toFixed(2)+' above','acc','start',gLab)];
+    E.bots.forEach(b=>op(b,.3));
   }
-  CRP.forEach((v,i)=>{el('circle',{cx:tx(LNV[i]),cy:yT,r:4.5,class:'pdot lnd'},svg);el('circle',{cx:bx(v),cy:yB,r:4.5,class:'pdot'},svg);});
-  el('line',{x1:tx(LNM),y1:yT,x2:bx(GM),y2:yB,class:'mapmean'},svg);
-  el('circle',{cx:tx(LNM),cy:yT,r:7,class:'gmk'},svg); el('circle',{cx:bx(GM),cy:yB,r:7,class:'gmk'},svg);
-  if(!ci){
-    T(tx(LNM),28,'mean of ln values = 0.857','acc','middle');
-    el('rect',{x:bx(AM)-6,y:yB-6,width:12,height:12,transform:`rotate(45 ${bx(AM)} ${yB})`,class:'amk'},svg);
-    T(bx(GM)-6,yB+34,'eˣ → 2.36 geometric mean','acc','start');
-    T(bx(AM)-6,yB+52,'4.22 arithmetic mean','amt','start');
+  let gen=0,cur=0;
+  const ease=k=>k<.5?2*k*k:1-(-2*k+2)**2/2;
+  const tween=(dur,f,my)=>{ if(!dur||reduced()){f(1);return Promise.resolve();}
+    return new Promise(res=>{const t0=performance.now();const step=now=>{if(my!==gen){res();return;}const k=Math.min(1,(now-t0)/dur);f(ease(k));k<1?requestAnimationFrame(step):res();};requestAnimationFrame(step);});};
+  const sleep=(ms,my)=>new Promise(res=>{ if(!ms||reduced())return res(); setTimeout(res,ms); });
+  const fade=(els,a,my,d=450)=>tween(d*a,k=>els.forEach(e=>op(e,k)),my);
+  function reset(){
+    op(E.meanTop,mode==='ci'?1:0); op(E.meanTopLbl,mode==='ci'?1:0); op(E.meanBot,0);
+    grow(E.meanLine,tx(LNM),yT,bx(GM),yB,0);
+    if(mode==='back'){ E.links.forEach((ln,i)=>{grow(ln,tx(LNV[i]),yT,bx(CRP[i]),yB,0);}); E.bots.forEach(b=>op(b,0)); [E.gmLbl,E.am,E.amLbl,...E.rings].forEach(e=>op(e,0)); }
+    else { E.links.forEach(ln=>op(ln,0)); E.bandT.setAttribute('x',tx(LNM)); E.bandT.setAttribute('width',0); op(E.bandB,0);
+      grow(E.loLine,tx(LO),yT,bx(eLo),yB,0); grow(E.hiLine,tx(HI),yT,bx(eHi),yB,0); [...E.pm,...E.vals,...E.dist].forEach(e=>op(e,0)); }
   }
+  const STAGES=mode==='back'?[
+    (a,my)=>fade([E.meanTop,E.meanTopLbl],a,my),
+    async(a,my)=>{ await Promise.all(E.links.map((ln,i)=>sleep(130*i*a,my).then(()=>my===gen&&tween(550*a,k=>grow(ln,tx(LNV[i]),yT,bx(CRP[i]),yB,k),my)).then(()=>my===gen&&fade([E.bots[i]],a,my,200)))); },
+    async(a,my)=>{ await tween(900*a,k=>grow(E.meanLine,tx(LNM),yT,bx(GM),yB,k),my); if(my===gen) await fade([E.meanBot,E.gmLbl],a,my); },
+    (a,my)=>fade([E.am,E.amLbl,...E.rings],a,my,600)
+  ]:[
+    (a,my)=>tween(800*a,k=>{E.bandT.setAttribute('x',tx(LNM)-(tx(LNM)-tx(LO))*k);E.bandT.setAttribute('width',(tx(HI)-tx(LO))*k);E.pm.forEach(e=>op(e,k));},my),
+    async(a,my)=>{ await Promise.all([tween(900*a,k=>grow(E.loLine,tx(LO),yT,bx(eLo),yB,k),my),tween(900*a,k=>grow(E.meanLine,tx(LNM),yT,bx(GM),yB,k),my),tween(900*a,k=>grow(E.hiLine,tx(HI),yT,bx(eHi),yB,k),my)]); if(my===gen) await fade([E.bandB,E.meanBot,...E.vals],a,my); },
+    (a,my)=>fade(E.dist,a,my,600)
+  ];
+  const N=STAGES.length, lis=[...list.children];
+  lis.forEach(li=>{li.innerHTML='<span>'+li.innerHTML+'</span>';});
+  const B=k=>ctl.querySelector(`[data-a="${k}"]`);
+  function ui(){ lis.forEach((li,i)=>{li.classList.toggle('now',i===cur);li.classList.toggle('done',i<cur);});
+    B('count').textContent=`Stage ${cur+1} of ${N+1}`; B('back').disabled=cur===0; B('next').disabled=cur===N; }
+  async function jump(n){ const my=++gen; reset(); for(let i=0;i<n;i++) await STAGES[i](0,my); cur=n; ui(); }
+  async function next(){ if(cur>=N)return; const from=cur; await jump(from); const my=gen; cur=from+1; ui(); await STAGES[from](1,my); }
+  async function playAll(){ await jump(0); const my=gen; B('play').textContent='▶ Replay';
+    for(let i=0;i<N;i++){ await sleep(i?900:400,my); if(my!==gen)return; cur=i+1; ui(); await STAGES[i](1,my); if(my!==gen)return; } }
+  B('play').addEventListener('click',playAll); B('next').addEventListener('click',next); B('back').addEventListener('click',()=>jump(Math.max(0,cur-1)));
+  lis.forEach((li,i)=>{li.tabIndex=0;li.addEventListener('click',()=>jump(i));li.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();jump(i);}});});
+  jump(0);
 }
-mapDiagram(document.getElementById('g-map'),false);
-mapDiagram(document.getElementById('g-map-ci'),true);
+makeMap(document.getElementById('g-map'),document.getElementById('ctl-map'),document.getElementById('st-map'),'back');
+makeMap(document.getElementById('g-map-ci'),document.getElementById('ctl-ci'),document.getElementById('st-ci'),'ci');
 
-/* three-patient slider */
+/* slider: change patient 12 */
 function mx(){
-  const big=Math.round(10**(+document.getElementById('mx').value/10)); const vals=[1,10,big];
-  const am=(1+10+big)/3, lg=vals.map(Math.log10), ml=(lg[0]+lg[1]+lg[2])/3, gm=10**ml;
-  document.getElementById('mx-v').textContent=big.toLocaleString();
-  document.getElementById('mx-am').textContent=am.toFixed(1);
-  document.getElementById('mx-amw').textContent=`(1 + 10 + ${big}) ÷ 3`;
-  document.getElementById('mx-gm').textContent=gm.toFixed(1);
-  document.getElementById('mx-gmw').textContent=`logs 0, 1, ${lg[2].toFixed(2)} → mean ${ml.toFixed(2)} → 10^${ml.toFixed(2)}`;
+  const v=Math.max(0.1,Math.round(10**(+document.getElementById('mx').value)*10)/10);
+  const vals=[...CRP.slice(0,11),v];
+  const am=mean(vals), gm=Math.exp(mean(vals.map(Math.log)));
+  document.getElementById('mx-v').textContent=v.toFixed(1);
+  document.getElementById('mx-am').textContent=am.toFixed(2)+' mg/L';
+  document.getElementById('mx-amw').textContent='(sum of the 12 values) ÷ 12';
+  document.getElementById('mx-gm').textContent=gm.toFixed(2)+' mg/L';
+  document.getElementById('mx-gmw').textContent='e^(mean of the 12 ln values)';
+  const dA=am-AM, dG=gm-GM, sg=x=>(x>=0?'+':'−')+Math.abs(x).toFixed(2);
+  document.getElementById('mx-note').innerHTML=Math.abs(v-18.5)<0.05?'Drag the slider to see how much each mean moves when one patient changes.':
+    `Changing patient 12 from 18.5 to ${v.toFixed(1)} mg/L moves the arithmetic mean by <b>${sg(dA)}</b> but the geometric mean by only <b>${sg(dG)}</b>. Logs shrink big values, so one extreme patient can't drag the geometric mean very far.`;
+  const svg=document.getElementById('g-mx'); svg.innerHTML='';
+  const Wd=560,Hd=120,m={l:20,r:20,b:30}; const Tk=niceTicks(0,Math.max(20,v*1.05),6); const sx=x=>m.l+(x-Tk.lo)/(Tk.hi-Tk.lo)*(Wd-m.l-m.r); const base=Hd-m.b;
+  el('line',{x1:m.l,x2:Wd-m.r,y1:base,y2:base,class:'axis'},svg);
+  Tk.ticks.forEach(t=>{el('line',{x1:sx(t),x2:sx(t),y1:base,y2:base+5,class:'axis'},svg);const s=el('text',{x:sx(t),y:base+19,'text-anchor':'middle'},svg);s.textContent=tickFmt(t);});
+  const u=el('text',{x:Wd-m.r,y:12,'text-anchor':'end'},svg);u.textContent='CRP (mg/L)';
+  const lxm=Math.max(sx(am),sx(gm))+6;
+  [[am,'am','arithmetic '+am.toFixed(2),0],[gm,'gm','geometric '+gm.toFixed(2),1]].forEach(([x,c,lab,row])=>{el('line',{x1:sx(x),x2:sx(x),y1:16,y2:base,class:'meanline '+c},svg);const t=el('text',{x:lxm,y:row?44:26,class:c,style:'stroke:none;font-weight:600'},svg);t.textContent=lab;});
+  vals.forEach((x,i)=>el('circle',{cx:sx(x),cy:base-8,r:6,class:i===11?'pdot p12':'pdot'},svg));
 }
 document.getElementById('mx').addEventListener('input',mx); mx();
 routeUpdate();
