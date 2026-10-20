@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body style="margin:0">
+<title>Transformation Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky tab bar; lesson column on the left, a sticky scientific calculator on the right (bottom drawer on phones).
+   Each function has its own colour used in text, keys and graphs: eˣ amber, log₁₀ indigo, ln plum. */
+:root{
+  --bg:#F2F5F6; --surface:#FFFFFF; --sunk:#E8EEF0; --ink:#13232E; --muted:#56666F; --line:#D5DEE2;
+  --accent:#0B6B80; --accent-ink:#FFFFFF; --accent-soft:#DDEFF2;
+  --exp:#B25A08; --exp-soft:#FBEBDB; --log:#4351C8; --log-soft:#E4E7FA; --ln:#953A8B; --ln-soft:#F5E3F2;
+  --good:#1D7A45; --good-soft:#DFF2E6; --bad:#B3313E; --bad-soft:#FBE3E5;
+  --key:#F4F7F8; --key-fn:#E3EBEE; --key-eq:#0B6B80; --shadow:0 1px 2px rgba(19,35,46,.06),0 6px 20px rgba(19,35,46,.06);
+  --f-display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E181E; --surface:#15232B; --sunk:#1B2C35; --ink:#E4EDF1; --muted:#9AAFB9; --line:#2A3C46;
+  --accent:#55BCD0; --accent-ink:#0B1A20; --accent-soft:#173A44;
+  --exp:#F2A14F; --exp-soft:#3A2814; --log:#93A0FF; --log-soft:#232A55; --ln:#E58BDA; --ln-soft:#3D2139;
+  --good:#5FCB8E; --good-soft:#183526; --bad:#FF7F8A; --bad-soft:#401D22;
+  --key:#1D2F39; --key-fn:#253A45; --key-eq:#55BCD0; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E181E; --surface:#15232B; --sunk:#1B2C35; --ink:#E4EDF1; --muted:#9AAFB9; --line:#2A3C46;
+  --accent:#55BCD0; --accent-ink:#0B1A20; --accent-soft:#173A44;
+  --exp:#F2A14F; --exp-soft:#3A2814; --log:#93A0FF; --log-soft:#232A55; --ln:#E58BDA; --ln-soft:#3D2139;
+  --good:#5FCB8E; --good-soft:#183526; --bad:#FF7F8A; --bad-soft:#401D22;
+  --key:#1D2F39; --key-fn:#253A45; --key-eq:#55BCD0; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(1.5rem,1.1rem + 1.6vw,2.2rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.45rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0}
+.mono,code,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+code{font-size:.9em;background:var(--sunk);padding:.08em .35em;border-radius:4px}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--surface);border-bottom:1px solid var(--line)}
+header.top > .wrap{padding-block:18px 0;display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.lede{color:var(--muted);max-width:68ch}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{font:inherit;font-weight:700;font-size:.95rem;background:none;border:0;color:var(--muted);padding:12px 14px 10px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:8px}
+nav.tabs button .sw{width:10px;height:10px;border-radius:50%;background:var(--c,var(--accent))}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--c,var(--accent))}
+nav.tabs button:hover{color:var(--ink)}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;align-items:start;padding-block:24px 80px}
+main{min-width:0}
+section.panel{display:flex;flex-direction:column;gap:22px}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.prose{max-width:70ch}
+div.prose{display:flex;flex-direction:column;gap:10px}
+.prose ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--muted)}
+.c-exp{--c:var(--exp);--cs:var(--exp-soft)} .c-log{--c:var(--log);--cs:var(--log-soft)} .c-ln{--c:var(--ln);--cs:var(--ln-soft)} .c-lab{--c:var(--accent);--cs:var(--accent-soft)}
+.fn{color:var(--c);font-weight:700}
+.hero-fn{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.formula{font-family:var(--f-mono);font-size:1.35rem;font-weight:600;color:var(--c);background:var(--cs);padding:8px 14px;border-radius:10px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.mini{background:var(--sunk);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.mini h3{font-size:1rem}
+
+/* Step header: the steps in the lab really are a sequence */
+.step-h{display:flex;gap:12px;align-items:baseline}
+.step-n{font-family:var(--f-mono);font-weight:600;font-size:.85rem;color:var(--accent-ink);background:var(--c,var(--accent));border-radius:6px;padding:2px 8px;flex:none}
+
+/* Keycaps */
+.keys{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.kc{font-family:var(--f-mono);font-size:.9rem;min-width:30px;text-align:center;padding:3px 8px;border-radius:6px;background:var(--key);border:1px solid var(--line);border-bottom-width:3px;color:var(--ink)}
+.kc.fnk{background:var(--key-fn);font-weight:600}
+.kc.eq{background:var(--key-eq);color:var(--accent-ink);border-color:var(--key-eq)}
+.arrow{color:var(--muted);font-size:.85rem}
+.howto{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;align-items:center;font-size:.92rem}
+.howto .lbl{color:var(--muted);font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em}
+
+button.btn{font:inherit;font-weight:700;font-size:.9rem;border-radius:8px;padding:7px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+button.btn:hover{background:var(--sunk)}
+button.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.btn.small{padding:4px 9px;font-size:.82rem}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* Answer tables */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table.act{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+table.act th{text-align:left;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:10px 12px;background:var(--sunk);border-bottom:1px solid var(--line)}
+table.act td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.act tr:last-child td{border-bottom:0}
+input.ans{font-family:var(--f-mono);font-size:1rem;width:9.5em;padding:6px 8px;border-radius:7px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+input.ans:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+input.ans.target{border-color:var(--accent);border-style:dashed}
+.fb{font-size:.86rem;line-height:1.35;display:flex;gap:6px;align-items:flex-start}
+.fb.ok{color:var(--good)} .fb.no{color:var(--bad)}
+.pill{white-space:nowrap;flex:none;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:999px}
+.pill.ok{background:var(--good-soft);color:var(--good)} .pill.no{background:var(--bad-soft);color:var(--bad)}
+.reveal{font-size:.86rem;color:var(--muted);display:flex;flex-direction:column;gap:6px;padding-top:4px}
+.reveal .eqn{font-family:var(--f-mono);color:var(--ink)}
+.progress{font-size:.9rem;color:var(--muted)}
+.progress b{color:var(--ink)}
+
+/* Callouts */
+.callout{border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;background:var(--cs,var(--accent-soft))}
+.callout.try{background:var(--sunk);border:1.5px dashed var(--line)}
+.callout.try .tag{background:var(--surface);color:var(--ink);align-self:flex-start}
+.callout.warn{background:var(--bad-soft)}
+.callout ol,.callout ul{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+
+/* Charts */
+.chart{width:100%;height:auto;display:block;max-width:100%}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .axis{stroke:var(--muted);stroke-width:1.2}
+.chart text{fill:var(--muted);font-family:var(--f-mono);font-size:11px}
+.chart .curve{fill:none;stroke:var(--c);stroke-width:2.5}
+.chart .ghost{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4;opacity:.8}
+.chart .dot{fill:var(--c);stroke:var(--surface);stroke-width:2}
+.chart .dot.wrong{fill:var(--surface);stroke:var(--bad);stroke-width:2.5}
+.chart .lbl-c{fill:var(--c);font-weight:600}
+.chart .meanline{stroke-width:2}
+.chart .am{stroke:var(--exp);fill:var(--exp)} .chart .gm{stroke:var(--accent);fill:var(--accent)}
+.chart .ci{fill:var(--accent);opacity:.16}
+.chart .bar{fill:var(--accent);opacity:.8}
+.chart .refline{fill:none;stroke:var(--muted);stroke-width:2;stroke-dasharray:1 5;stroke-linecap:round}
+.chart .move{stroke:var(--c);stroke-width:2;opacity:.8}
+.chart .arrowhead{fill:var(--c)}
+.chart .guide{stroke:var(--c);stroke-width:1.3;stroke-dasharray:3 4;opacity:.6}
+.chart .xmark{fill:var(--surface);stroke:var(--c);stroke-width:2.2}
+.chart .xlab{fill:var(--c);font-weight:600;font-size:12px}
+.defs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.defs>div{background:var(--sunk);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.defs h3{font-size:.95rem}
+.defs dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:.92rem}
+.defs dt{font-family:var(--f-mono);font-weight:600;white-space:nowrap}
+.defs dd{margin:0;color:var(--muted)}
+.step-h{flex-wrap:wrap}
+.scale{margin-left:auto;font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap;align-self:center}
+.scale.raw{background:var(--exp-soft);color:var(--exp)} .scale.ln{background:var(--ln-soft);color:var(--ln)} .scale.both{background:var(--sunk);color:var(--ink)}
+.route{display:flex;align-items:stretch;gap:6px;overflow-x:auto;padding-bottom:4px}
+.route button{font:inherit;text-align:left;display:flex;flex-direction:column;gap:6px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);flex:1 0 132px}
+.route button:hover{border-color:var(--accent)}
+.route .rn{font-family:var(--f-mono);font-weight:600;background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:1px 8px;font-size:.8rem}
+.route button.done .rn{background:var(--good)}
+.route .rtx{display:flex;flex-direction:column;font-size:.83rem;color:var(--muted);line-height:1.3}
+.route .rtx b{color:var(--ink);font-size:.95rem}
+.route .scale{margin-left:0}
+.route .ra{align-self:center;color:var(--muted);font-weight:700;flex:none}
+.block[id^="lab-s"]{scroll-margin-top:70px}
+.split{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start}
+.split.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.split .col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.split .chartbox .chart{min-width:0}
+.chartbox .chart.map{min-width:520px}
+.small{font-size:.88rem;color:var(--muted)}
+ul.small{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:3px}
+.sw-card{background:var(--sunk);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.sw-card .chartbox{background:var(--surface)}
+.cmp-h{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.cmp-h .scale{margin-left:0}
+.sw-result{background:var(--surface);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;animation:pop .4s ease-out}
+.sw-nums{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+@keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.pcard{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;background:var(--surface);min-width:0}
+.pcard.ok{border-color:var(--good);background:var(--good-soft)}
+.pcard .ph{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;gap:8px}
+.pcard .kc{min-width:22px;padding:1px 5px;font-size:.78rem}
+.qrow{display:flex;gap:6px;align-items:center}
+.qrow input.ans{flex:1;min-width:0;width:auto}
+.why{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:12px}
+.cols3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.mini-ex{background:var(--sunk);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.mini-ex input[type=range]{width:100%;accent-color:var(--accent)}
+.mx-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.mx{background:var(--surface);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;border-left:4px solid var(--exp)}
+.mx.gm{border-left-color:var(--accent)}
+.mx .k{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.mx>.mono:not(.small){font-size:1.5rem;font-weight:600}
+.givens{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.givens>div{background:var(--sunk);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.givens .k{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.givens .v{font-family:var(--f-mono);font-size:1.25rem;font-weight:600}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:stretch}
+.fcol{background:var(--sunk);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.farrow{align-self:center;color:var(--muted);font-weight:700;font-family:var(--f-mono);white-space:nowrap}
+.qa{display:flex;flex-direction:column;gap:6px}
+.qa label{font-size:.9rem}
+.chart .hbin{fill:var(--line);opacity:.55}
+.chart .pdot{fill:var(--ink);opacity:.8}
+.chart .pdot.lnd{fill:var(--ln);opacity:.9}
+.chart .gdot{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:2 2;opacity:.7}
+.chart .link{stroke:var(--muted);stroke-width:1;opacity:.5}
+.chart .link.faint{opacity:.22}
+.chart .mapmean{stroke:var(--accent);stroke-width:3.5}
+.chart .mapci{stroke:var(--accent);stroke-width:1.8;stroke-dasharray:5 3}
+.chart .ciband{fill:var(--accent);opacity:.25}
+.chart .gmk{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.chart .amk{fill:var(--exp);stroke:var(--surface);stroke-width:2}
+.chart text.acc{fill:var(--accent);font-weight:600}
+.chart text.amt{fill:var(--exp);font-weight:600}
+.chart text.lnt{fill:var(--ln)}
+@media (max-width:760px){
+  .split,.split.even{grid-template-columns:minmax(0,1fr)}
+  .flow{grid-template-columns:minmax(0,1fr)}
+  .farrow{justify-self:center;transform:rotate(90deg)}
+}
+.rule{background:var(--cs,var(--accent-soft));border-radius:8px;padding:9px 13px;font-size:.93rem;max-width:72ch}
+.dp{display:inline-block;margin-left:6px;font-size:.7rem;letter-spacing:0;text-transform:none;background:var(--cs,var(--accent-soft));color:var(--c,var(--accent));padding:1px 7px;border-radius:999px;font-weight:700}
+.legend i.lg-x{width:9px;height:9px;border:2px solid var(--c);background:var(--surface);transform:rotate(45deg);border-radius:1px}
+.legend i.lg-r{width:16px;height:0;border-top:2px dotted var(--muted);background:none;border-radius:0}
+.legend i.lg-y{width:11px;height:11px;border-radius:50%;background:var(--c)}
+.legend i.lg-n{width:11px;height:11px;border-radius:50%;border:2px solid var(--bad);background:var(--surface)}
+.chart .normc{fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:6 4;opacity:.7}
+.chart .axl{font-family:var(--f-body);font-size:12px}
+.chartbox{background:var(--sunk);border-radius:10px;padding:10px;overflow-x:auto}
+.chartbox .chart{min-width:480px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;background:var(--sunk);padding:4px;border-radius:10px}
+.seg button{font:inherit;font-size:.88rem;font-weight:700;border:0;background:none;color:var(--muted);padding:6px 10px;border-radius:7px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.stat-row{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.stat-row div{display:flex;flex-direction:column}
+.stat-row .k{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.stat-row .v{font-family:var(--f-mono);font-size:1.1rem;font-weight:600}
+table.ref{border-collapse:collapse;width:100%;min-width:480px;font-size:.93rem}
+table.ref th,table.ref td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.ref th{font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.work{font-family:var(--f-mono);font-size:.88rem;background:var(--sunk);border-radius:8px;padding:10px 12px;overflow-x:auto;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
+.answer-line{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.answer-line label{font-weight:700}
+
+/* Calculator */
+aside.calc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px);background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px;display:flex;flex-direction:column;gap:10px}
+.calc-head{display:flex;justify-content:space-between;align-items:center}
+.calc-head h2{font-size:1.05rem}
+.screen{background:var(--sunk);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-height:92px;justify-content:flex-end;overflow:hidden}
+.screen .expr{font-family:var(--f-mono);font-size:.95rem;color:var(--muted);text-align:right;word-break:break-all;min-height:1.4em}
+.screen .res{font-family:var(--f-mono);font-size:1.6rem;font-weight:600;text-align:right;word-break:break-all;line-height:1.2}
+.screen .res.err{word-break:normal;font-size:.95rem;color:var(--bad);font-family:var(--f-body);font-weight:700}
+.screen .rnd{font-size:.78rem;color:var(--muted);text-align:right;min-height:1.2em}
+.pad{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.pad button{font-family:var(--f-mono);font-size:1rem;padding:10px 0;border-radius:8px;border:1px solid var(--line);border-bottom-width:3px;background:var(--key);color:var(--ink);cursor:pointer;transition:transform .08s}
+.pad button:active,.pad button.flash{transform:translateY(2px);border-bottom-width:1px}
+.pad button.fnk{background:var(--key-fn);font-weight:600;font-size:.95rem}
+.pad button.fnk.k-ex{color:var(--exp)} .pad button.fnk.k-log,.pad button.fnk.k-10x{color:var(--log)} .pad button.fnk.k-ln{color:var(--ln)}
+.pad button.eq{background:var(--key-eq);color:var(--accent-ink);border-color:var(--key-eq)}
+.pad button.wide{grid-column:span 2}
+.pad button.flash{outline:3px solid var(--accent);outline-offset:1px}
+.sendbar{display:flex;flex-direction:column;gap:6px;font-size:.85rem}
+.sendbar .t{color:var(--muted)}
+.hist{display:flex;flex-direction:column;gap:2px;max-height:140px;overflow:auto;border-top:1px solid var(--line);padding-top:8px}
+.hist h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-family:var(--f-body)}
+.hist button{font-family:var(--f-mono);font-size:.82rem;text-align:right;background:none;border:0;color:var(--ink);padding:3px 4px;border-radius:5px;cursor:pointer}
+.hist button:hover{background:var(--sunk)}
+.hist button span{color:var(--muted)}
+button.calc-fab,button.calc-close{display:none}
+
+@media (max-width:1000px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  aside.calc{position:fixed;left:0;right:0;bottom:0;top:auto;border-radius:16px 16px 0 0;max-height:82vh;overflow:auto;z-index:40;
+    padding:14px max(16px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+    transform:translateY(105%);transition:transform .25s ease}
+  body.calc-open aside.calc{transform:none}
+  button.calc-fab{display:inline-flex;position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:35;box-shadow:var(--shadow)}
+  body.calc-open button.calc-fab{display:none}
+  button.calc-close{display:inline-flex}
+  .hist{max-height:90px}
+}
+@media (max-width:520px){ .block{padding:16px} .howto{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important} }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow">BIOL 200 · Violations of Assumptions</span>
+    <h1>Transformation Lab</h1>
+    <p class="lede">Practise exponential and logarithmic transformations, then transform a real-style medical dataset and back-transform the results. The calculator stays beside you the whole time so you can see every number being made.</p>
+  </div>
+  <nav class="tabs" aria-label="Lab sections">
+    <div class="wrap" role="tablist">
+      <button role="tab" data-tab="overview" class="c-lab" aria-selected="true"><span class="sw"></span>Start here</button>
+      <button role="tab" data-tab="exp" class="c-exp" aria-selected="false"><span class="sw"></span>Exponential eˣ</button>
+      <button role="tab" data-tab="log10" class="c-log" aria-selected="false"><span class="sw"></span>Log base 10</button>
+      <button role="tab" data-tab="ln" class="c-ln" aria-selected="false"><span class="sw"></span>Natural log ln</button>
+      <button role="tab" data-tab="lab" class="c-lab" aria-selected="false"><span class="sw"></span>Back-transform lab</button>
+    </div>
+  </nav>
+</header>
+
+<div class="wrap layout">
+<main>
+
+<!-- ============ OVERVIEW ============ -->
+<section class="panel c-lab" id="p-overview" data-panel="overview">
+  <div class="block">
+    <h2>Why transform data?</h2>
+    <div class="prose">
+      <p>A Student's t-test assumes each group is <b>normally distributed</b> and that the groups have <b>equal variance</b> (homogeneity of variance, HOV). When a dataset is badly skewed, one option is to <b>transform</b> it: apply the same mathematical function to every value so the data are rescaled into a more symmetric shape.</p>
+      <ul>
+        <li><b>Linear</b> transformations (add, subtract, multiply or divide by a constant) move or stretch the data but keep its shape. They never fix skew.</li>
+        <li><b>Non-linear</b> transformations (log, square root, exponential) change the <i>spacing</i> between values, which is what changes the shape.</li>
+        <li>After analysing transformed data, you <b>back-transform</b> results (means, confidence limits) into the original units so they make sense.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="step-h"><h2>See it: what each transformation does to skewed data</h2></div>
+    <p class="prose">These are C-reactive protein (CRP) levels from <b>400 adults</b> at a large health screening (simulated data). Most people have low CRP and a few have very high values, so the histogram has a long tail to the right: the data are <b>right-skewed</b>. Choose a transformation and watch the bars reshape. The dashed line shows what a normal distribution with the same mean and SD would look like. (In the lab you'll work by hand with a smaller group of 12 patients.)</p>
+    <div class="defs">
+      <div><h3>Linear: changes the numbers, not the shape</h3>
+        <dl>
+          <dt>Multiply by 2</dt><dd>Every value × 2. A CRP of 3.0 becomes 6.0. Like changing units (e.g. mg/L to mg/dL is ÷ 10).</dd>
+          <dt>Add 5</dt><dd>Every value + 5. A CRP of 3.0 becomes 8.0. The whole dataset slides along the axis.</dd>
+        </dl></div>
+      <div><h3>Non-linear: changes the spacing, so the shape changes</h3>
+        <dl>
+          <dt>√x</dt><dd>Square root. 4 becomes 2, 9 becomes 3, 16 becomes 4.</dd>
+          <dt>log₁₀(x)</dt><dd>The power of 10. 10 becomes 1, 100 becomes 2.</dd>
+          <dt>ln(x)</dt><dd>The power of e. 2.72 becomes 1, 7.39 becomes 2.</dd>
+          <dt>1 / x</dt><dd>The inverse. 2 becomes 0.5, 4 becomes 0.25. Big values become small and small values become big.</dd>
+        </dl></div>
+    </div>
+    <div class="seg" id="ov-seg" role="group" aria-label="Choose a transformation">
+      <button data-t="raw" aria-pressed="true">Original</button>
+      <button data-t="x2">Multiply by 2</button>
+      <button data-t="p5">Add 5</button>
+      <button data-t="sqrt">√x</button>
+      <button data-t="log10">log₁₀(x)</button>
+      <button data-t="ln">ln(x)</button>
+      <button data-t="inv">1 / x</button>
+    </div>
+    <div class="chartbox"><svg class="chart" id="ov-chart" viewBox="0 0 560 270" role="img" aria-label="Histogram of 400 CRP values after the chosen transformation, with a normal curve for comparison"></svg></div>
+    <div class="btnrow"><button class="btn small" id="ov-play">▶ Play: original → √x → log₁₀ → ln</button>
+      <div class="legend"><span><i style="background:var(--accent);height:10px;width:12px;opacity:.8"></i>Patients per bin</span><span><i style="background:none;border-top:2px dashed var(--ink);height:0;opacity:.7"></i>Normal curve, same mean and SD</span></div></div>
+    <div class="stat-row">
+      <div><span class="k">n</span><span class="v">400</span></div>
+      <div><span class="k">Transformation</span><span class="v" id="ov-name">none</span></div>
+      <div><span class="k">Skewness</span><span class="v" id="ov-skew">—</span></div>
+      <div><span class="k">Shape</span><span class="v" id="ov-shape">—</span></div>
+    </div>
+    <p class="progress" id="ov-note"></p>
+  </div>
+
+  <div class="block">
+    <h2>Which transformation for which problem?</h2>
+    <div class="tablewrap" style="border:0">
+    <table class="ref">
+      <thead><tr><th>Problem in the data</th><th>Try</th><th>Back-transform with</th><th>Excel</th></tr></thead>
+      <tbody>
+        <tr><td>Right skew (long tail of large values)</td><td><span class="fn c-ln">ln(x)</span> or <span class="fn c-log">log₁₀(x)</span></td><td><span class="fn c-exp">eˣ</span> or <span class="fn c-log">10ˣ</span></td><td><code>=LN()</code> → <code>=EXP()</code><br><code>=LOG10()</code> → <code>=10^</code></td></tr>
+        <tr><td>Mild right skew, counts</td><td>√x</td><td>x²</td><td><code>=SQRT()</code> → <code>=^2</code></td></tr>
+        <tr><td>Severe right skew</td><td>1 / x</td><td>1 / x</td><td><code>=1/A2</code></td></tr>
+        <tr><td>Left skew (long tail of small values)</td><td>x² or <span class="fn c-exp">eˣ</span></td><td>√x or <span class="fn c-ln">ln(x)</span></td><td><code>=A2^2</code>, <code>=EXP()</code></td></tr>
+        <tr><td>Proportions (0 to 1)</td><td>logit</td><td>inverse logit</td><td>covered later</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="progress">Every transformation has an <b>opposite</b> (inverse) that undoes it. <span class="fn c-ln">ln</span> and <span class="fn c-exp">eˣ</span> are a pair: e<sup>ln(x)</sup> = x. That is the whole idea behind back-transformation.</p>
+  </div>
+
+  <div class="block">
+    <span class="eyebrow">For the next tabs</span>
+    <h2>How to use the calculator</h2>
+    <p class="prose">There is nothing to calculate on this page. You'll use the calculator in the <span class="fn c-exp">eˣ</span>, <span class="fn c-log">log₁₀</span> and <span class="fn c-ln">ln</span> tabs and in the back-transform lab. It sits beside the lesson (on a phone, tap the <b>Calculator</b> button). Read these tips now, or come back to them any time.</p>
+    <div class="cols">
+      <div class="mini"><h3>1 · Press the function first</h3><p>Pressing <span class="kc fnk">ln</span> types <code>ln(</code>. Then type your number. The bracket closes itself when you press <span class="kc eq">=</span>.</p></div>
+      <div class="mini"><h3>2 · Watch the top line</h3><p>The grey line shows exactly what is being calculated, like <code>e^(1.5)</code>. If it doesn't match what you meant, press <span class="kc">C</span> and start again.</p></div>
+      <div class="mini"><h3>3 · Send the answer</h3><p>Click an answer box first, then press <b>Use this value</b> to drop the result in, rounded to 4 decimal places.</p></div>
+      <div class="mini"><h3>4 · Stuck? Press "Show me"</h3><p>Every question has a <b>Show me</b> button that presses the keys on the calculator for you, one at a time.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPONENTIAL ============ -->
+<section class="panel c-exp" id="p-exp" data-panel="exp" hidden>
+  <div class="block">
+    <div class="hero-fn"><span class="formula">y = eˣ</span><span class="tag">e ≈ 2.71828</span></div>
+    <div class="prose">
+      <p>An <b>exponential transformation</b> raises a base to the power of each data value. In biology the base is almost always <b>Euler's number, e ≈ 2.718</b>. So for the value 2, the transformed value is e² = 2.718 × 2.718 = 7.389.</p>
+      <p>Exponentials <b>stretch out large values</b>: each step of 0.5 in x makes y jump by more than the step before. That is why eˣ can pull a <i>left-skewed</i> dataset toward symmetry, and why it is the tool for undoing a natural log.</p>
+    </div>
+    <div class="callout">
+      <b>Worked example: e<sup>0.5</sup></b>
+      <div class="howto">
+        <span class="lbl">This calculator</span><span class="keys" data-keys="ex 0 . 5 ) ="></span>
+        <span class="lbl">Windows Scientific</span><span class="keys"><span class="kc">e</span><span class="kc fnk">xʸ</span><span class="kc">0</span><span class="kc">.</span><span class="kc">5</span><span class="kc eq">=</span></span>
+        <span class="lbl">Excel</span><span><code>=EXP(0.5)</code></span>
+        <span class="lbl">Result</span><span class="mono">1.6487</span>
+      </div>
+      <div class="btnrow"><button class="btn small" data-play="ex 0 . 5 ) =">▶ Show me on the calculator</button></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="step-h"><span class="step-n">Activity</span><h3>Calculate eˣ for x = 1, 1.5, 2 and 2.5, then see them on the graph</h3></div>
+    <p class="prose">Your starting values are the ◇ diamonds on the dotted <b>y = x</b> line: that is where each value sits with no transformation. Type each transformed y into its box and a dot appears straight above or below its diamond, with an arrow showing how far the transformation moved it.</p>
+    <p class="rule"><b>Round every answer to 4 decimal places</b>, for example <span class="mono">1.6487</span>. The calculator shows the rounded value under each result, and <b>Use this value</b> rounds it for you.</p>
+    <div class="tablewrap"><table class="act" id="t-exp"></table></div>
+    <p class="progress" id="pr-exp"></p>
+    <div class="chartbox"><svg class="chart" id="g-exp" viewBox="0 0 560 320" role="img" aria-label="Graph of y equals e to the x with your points"></svg></div>
+    <div class="legend"><span><i class="lg-x"></i>Original value (no transformation)</span><span><i class="lg-r"></i>y = x line</span><span><i class="lg-y"></i>Your transformed value</span><span><i class="lg-n"></i>Check this one again</span></div>
+    <div class="btnrow">
+      <label style="display:flex;gap:8px;align-items:center;font-size:.92rem"><input type="checkbox" id="cmp-exp"> Compare with 2ˣ and 10ˣ</label>
+    </div>
+    <p class="progress" id="cmp-note" hidden>Same shape, different base. 2ˣ passes through (2, 4), eˣ through (2, 7.39) and 10ˣ through (2, 100, off the top of the graph). The base you use matters, so always check you are using <b>e</b>.</p>
+  </div>
+
+  <div class="callout try">
+    <span class="tag">Things to try</span>
+    <ul>
+      <li>Try e<sup>0</sup>. What do you get, and why does every exponential curve pass through (0, 1)?</li>
+      <li>x goes up by 0.5 each time. Does y go up by the same amount each time, or do the gaps grow?</li>
+      <li>Look at the arrows. Did eˣ move the starting values up or down? Which value moved the most?</li>
+      <li>Tick "Compare with 2ˣ and 10ˣ". Which base grows fastest?</li>
+      <li>Take one of your answers and press ln on it. What do you get back?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ LOG 10 ============ -->
+<section class="panel c-log" id="p-log10" data-panel="log10" hidden>
+  <div class="block">
+    <div class="hero-fn"><span class="formula">y = log₁₀(x)</span><span class="tag">opposite of 10ˣ</span></div>
+    <div class="prose">
+      <p>A logarithm answers one question: <b>"What power do I raise the base to, to get this number?"</b> For base 10, log₁₀(1000) = 3 because 10³ = 1000.</p>
+      <p>Logs <b>compress large values</b>: 1,000 becomes 3, and 10,000 only becomes 4. That is why logs pull in the long tail of <i>right-skewed</i> data.</p>
+      <ul>
+        <li>log of 1 is 0 for any base, because anything raised to the power 0 is 1.</li>
+        <li>log of 0 or a negative number is <b>undefined</b>. Try it on the calculator and see what happens.</li>
+      </ul>
+    </div>
+    <div class="tablewrap" style="border:0">
+      <table class="ref" style="min-width:420px">
+        <thead><tr><th>Number</th><th>written as a power of 10</th><th>log₁₀(number)</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">1</td><td class="mono">10⁰</td><td class="mono">0</td></tr>
+          <tr><td class="mono">10</td><td class="mono">10¹</td><td class="mono">1</td></tr>
+          <tr><td class="mono">100</td><td class="mono">10²</td><td class="mono">2</td></tr>
+          <tr><td class="mono">1,000</td><td class="mono">10³</td><td class="mono">3</td></tr>
+          <tr><td class="mono">10,000</td><td class="mono">10⁴</td><td class="mono">4</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <b>Worked example: log₁₀(20)</b>
+      <div class="howto">
+        <span class="lbl">This calculator</span><span class="keys" data-keys="log 2 0 ) ="></span>
+        <span class="lbl">Windows Scientific</span><span class="keys"><span class="kc">2</span><span class="kc">0</span><span class="kc fnk">log</span></span>
+        <span class="lbl">Excel</span><span><code>=LOG10(20)</code></span>
+        <span class="lbl">Result</span><span class="mono">1.3010</span>
+      </div>
+      <div class="btnrow"><button class="btn small" data-play="log 2 0 ) =">▶ Show me on the calculator</button></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="step-h"><span class="step-n">Activity</span><h3>Calculate log₁₀(x) for x = 1 to 5, then see them on the graph</h3></div>
+    <p class="prose">Your starting values are the ◇ diamonds on the dotted <b>y = x</b> line: that is where each value sits with no transformation. Type each transformed y into its box and a dot appears straight above or below its diamond, with an arrow showing how far the transformation moved it.</p>
+    <p class="rule"><b>Round every answer to 4 decimal places</b>, for example <span class="mono">1.3010</span> (keep the final zero). The calculator shows the rounded value under each result, and <b>Use this value</b> rounds it for you.</p>
+    <div class="tablewrap"><table class="act" id="t-log10"></table></div>
+    <p class="progress" id="pr-log10"></p>
+    <div class="chartbox"><svg class="chart" id="g-log10" viewBox="0 0 560 320" role="img" aria-label="Graph of log base 10 of x with your points"></svg></div>
+    <div class="legend"><span><i class="lg-x"></i>Original value (no transformation)</span><span><i class="lg-r"></i>y = x line</span><span><i class="lg-y"></i>Your transformed value</span><span><i class="lg-n"></i>Check this one again</span></div>
+  </div>
+
+  <div class="callout try">
+    <span class="tag">Things to try</span>
+    <ul>
+      <li>Try log of 10, 100 and 1000. What pattern do you see?</li>
+      <li>Try log of 0, then log of a negative number. What does the calculator say, and why?</li>
+      <li>Going from x = 1 to 2 adds 0.30 to y. How much does going from x = 4 to 5 add?</li>
+      <li>Look at the arrows. Which starting value moved furthest from the y = x line?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ LN ============ -->
+<section class="panel c-ln" id="p-ln" data-panel="ln" hidden>
+  <div class="block">
+    <div class="hero-fn"><span class="formula">y = ln(x)</span><span class="tag">log base e · opposite of eˣ</span></div>
+    <div class="prose">
+      <p>The <b>natural log</b>, written <b>ln</b> (or logₑ), asks: "What power do I raise <b>e</b> to, to get this number?" ln(7.389) = 2 because e² = 7.389.</p>
+      <p>It is the most common log transformation in biology, and it pairs with <b>eˣ</b> (Excel <code>EXP</code>) for back-transforming. ln gives bigger numbers than log₁₀ for the same x, but the shape is the same: ln(x) is always 2.303 × log₁₀(x).</p>
+    </div>
+    <div class="callout">
+      <b>Worked example: ln(20), then undo it</b>
+      <div class="howto">
+        <span class="lbl">Transform</span><span class="keys" data-keys="ln 2 0 ) ="></span>
+        <span class="lbl">Result</span><span class="mono">2.9957</span>
+        <span class="lbl">Back-transform</span><span class="keys" data-keys="ex 2 . 9 9 5 7 ) ="></span>
+        <span class="lbl">Result</span><span class="mono">19.9999 ≈ 20 &nbsp;<span style="color:var(--muted)">(tiny difference comes from rounding to 4 decimals)</span></span>
+        <span class="lbl">Excel</span><span><code>=LN(20)</code> then <code>=EXP(2.9957)</code></span>
+      </div>
+      <div class="btnrow"><button class="btn small" data-play="ln 2 0 ) =">▶ Show me ln(20)</button><button class="btn small" data-play="ex 2 . 9 9 5 7 ) =">▶ Show me e^2.9957</button></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="step-h"><span class="step-n">Activity</span><h3>Calculate ln(x) for x = 1 to 5, then see them on the graph</h3></div>
+    <p class="prose">Your starting values are the ◇ diamonds on the dotted <b>y = x</b> line: that is where each value sits with no transformation. Type each transformed y into its box and a dot appears straight above or below its diamond, with an arrow showing how far the transformation moved it.</p>
+    <p class="rule"><b>Round every answer to 4 decimal places</b>, for example <span class="mono">2.9957</span>. The calculator shows the rounded value under each result, and <b>Use this value</b> rounds it for you.</p>
+    <div class="tablewrap"><table class="act" id="t-ln"></table></div>
+    <p class="progress" id="pr-ln"></p>
+    <div class="chartbox"><svg class="chart" id="g-ln" viewBox="0 0 560 320" role="img" aria-label="Graph of natural log of x with your points"></svg></div>
+    <div class="legend"><span><i class="lg-x"></i>Original value (no transformation)</span><span><i class="lg-r"></i>y = x line</span><span><i class="lg-y"></i>Your transformed value</span><span><i class="lg-n"></i>Check this one again</span></div>
+    <div class="btnrow"><label style="display:flex;gap:8px;align-items:center;font-size:.92rem"><input type="checkbox" id="cmp-ln"> Compare with log₁₀(x)</label></div>
+  </div>
+
+  <div class="callout try">
+    <span class="tag">Things to try</span>
+    <ul>
+      <li>Try ln(e): press ln, then the e key. Why is the answer exactly 1?</li>
+      <li>Compare ln(5) with log₁₀(5). Which is bigger, and why? (Hint: which base is smaller, e or 10?)</li>
+      <li>Tick "Compare with log₁₀(x)". Do the two curves have the same shape?</li>
+      <li>Pick any answer and press eˣ on it. Do you get your starting value back?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ LAB ============ -->
+<section class="panel c-lab" id="p-lab" data-panel="lab" hidden>
+  <div class="block">
+    <span class="eyebrow">The dataset</span>
+    <h2>C-reactive protein at a health screening</h2>
+    <div class="prose">
+      <p><b>C-reactive protein (CRP)</b> is made by the liver and rises in the blood when there is inflammation in the body. A clinic measured CRP (in <b>mg/L</b>) in 12 adults at a routine screening. Doctors often group results like this: <b>below 1</b> mg/L lower risk, <b>1 to 3</b> average, <b>above 3</b> higher cardiovascular risk.</p>
+      <p>Most people have low CRP, but a few have high values. Your job: decide what a <b>typical</b> CRP is for this group.</p>
+    </div>
+    <p class="progress" style="font-size:.82rem">Example data made up for practice, with values in a realistic range.</p>
+  </div>
+
+  <nav class="route" aria-label="Lab steps">
+    <button type="button" data-go="lab-s1"><span class="rn">1</span><span class="rtx"><b>Look</b><span>Is CRP normal?</span></span><span class="scale raw">mg/L</span></button>
+    <span class="ra" aria-hidden="true">→</span>
+    <button type="button" data-go="lab-s2"><span class="rn">2</span><span class="rtx"><b>Transform</b><span>ln of each value</span></span><span class="scale ln">log scale</span></button>
+    <span class="ra" aria-hidden="true">→</span>
+    <button type="button" data-go="lab-s3"><span class="rn">3</span><span class="rtx"><b>Average</b><span>mean of the ln values</span></span><span class="scale ln">log scale</span></button>
+    <span class="ra" aria-hidden="true">→</span>
+    <button type="button" data-go="lab-s4"><span class="rn">4</span><span class="rtx"><b>Back-transform</b><span>eˣ gives the geometric mean</span></span><span class="scale raw">back to mg/L</span></button>
+    <span class="ra" aria-hidden="true">→</span>
+    <button type="button" data-go="lab-s5"><span class="rn">5</span><span class="rtx"><b>Interval</b><span>95% CI, then eˣ</span></span><span class="scale both">ln → mg/L</span></button>
+  </nav>
+
+  <!-- Step 1 -->
+  <div class="block" id="lab-s1">
+    <div class="step-h"><span class="step-n">Step 1</span><h3>Look at the raw data: is CRP normally distributed?</h3><span class="scale raw">mg/L</span></div>
+    <div class="split">
+      <div class="col">
+        <div class="chartbox"><svg class="chart" id="g-raw" viewBox="0 0 440 200" role="img" aria-label="Dot histogram of raw CRP values"></svg></div>
+        <div class="stat-row">
+          <div><span class="k">n</span><span class="v">12</span></div>
+          <div><span class="k">Arithmetic mean</span><span class="v">4.2167 mg/L</span></div>
+          <div><span class="k">Skewness</span><span class="v">2.18</span></div>
+        </div>
+        <p class="prose">Each dot is one patient, stacked in 2 mg/L bins like a histogram. Most patients pile up on the left, and two high patients (9.8 and 18.5) sit far out to the right. The arithmetic mean (4.22) is bigger than 9 of the 12 values.</p>
+        <details><summary style="cursor:pointer;font-weight:700">Show the arithmetic mean calculation</summary>
+          <div class="work" id="w-am" style="margin-top:8px"></div>
+        </details>
+      </div>
+      <div class="sw-card">
+        <h3>Shapiro-Wilk test</h3>
+        <p class="small">This test checks whether data look like they came from a normal distribution.</p>
+        <ul class="small">
+          <li><b>p &lt; 0.05</b>: not normal. The assumption fails.</li>
+          <li><b>p ≥ 0.05</b>: no evidence against normality. The assumption is OK.</li>
+        </ul>
+        <button class="btn primary" id="sw-before-btn" type="button">Run the test on raw CRP</button>
+        <div class="sw-result" id="sw-before" hidden></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="block" id="lab-s2">
+    <div class="step-h"><span class="step-n">Step 2</span><h3>Transform: calculate ln(CRP) for every patient</h3><span class="scale ln">log scale</span></div>
+    <div class="split even">
+      <div class="callout">
+        <b>Keys for each patient</b>
+        <div class="howto">
+          <span class="lbl">This calculator</span><span class="keys"><span class="kc fnk">ln</span><span class="kc">CRP value</span><span class="kc">)</span><span class="kc eq">=</span></span>
+          <span class="lbl">Windows Scientific</span><span class="keys"><span class="kc">CRP value</span><span class="kc fnk">ln</span></span>
+          <span class="lbl">Excel</span><span><code>=LN(B2)</code>, then fill down</span>
+        </div>
+      </div>
+      <div class="col">
+        <p class="rule"><b>Steps 2 to 5: round every answer to 4 decimal places</b>, for example <span class="mono">1.4351</span>. Keep the minus sign on negative values, like <span class="mono">−0.9163</span>.</p>
+        <p class="small">Values below 1 give a <b>negative</b> ln. That is fine: ln(0.4) = −0.9163 because e<sup>−0.9163</sup> = 0.4. Only 0 and negative <i>raw</i> values can't be logged.</p>
+      </div>
+    </div>
+    <div class="pgrid" id="pgrid"></div>
+    <div class="btnrow"><span class="progress" id="pr-lab"></span><button class="btn small" id="fill-lab" type="button">Fill in the rest for me (after you've done at least 4)</button></div>
+
+    <h3 style="margin-top:6px">Before and after the transformation</h3>
+    <div class="split even">
+      <div class="sw-card">
+        <div class="cmp-h"><b>Before: raw CRP</b><span class="scale raw">mg/L</span></div>
+        <div class="chartbox"><svg class="chart" id="g-cmp-raw" viewBox="0 0 360 200" role="img" aria-label="Dot histogram of raw CRP"></svg></div>
+        <div class="sw-result" id="sw-before-2"></div>
+      </div>
+      <div class="sw-card">
+        <div class="cmp-h"><b>After: ln(CRP)</b><span class="scale ln">log scale</span></div>
+        <div class="chartbox"><svg class="chart" id="g-cmp-ln" viewBox="0 0 360 200" role="img" aria-label="Dot histogram of ln CRP, filling in as you calculate"></svg></div>
+        <p class="small">Dotted circles fill in as you calculate each patient.</p>
+        <button class="btn primary" id="sw-after-btn" type="button" disabled>Finish all 12 patients to run the test</button>
+        <div class="sw-result" id="sw-after" hidden></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="block" id="lab-s3">
+    <div class="step-h"><span class="step-n">Step 3</span><h3>Find the mean on the log scale</h3><span class="scale ln">log scale</span></div>
+    <div class="split">
+      <div class="col">
+        <p class="prose">Add up all 12 ln values and divide by 12. This number is in "ln mg/L" units, which nobody can picture, so don't stop here.</p>
+        <div class="answer-line"><label for="a-lnmean">Mean of ln(CRP) =</label><input class="ans" id="a-lnmean" inputmode="decimal" autocomplete="off" data-label="Mean of ln(CRP)"></div>
+        <span class="fb" id="f-lnmean"></span>
+        <div class="btnrow"><button class="btn small" id="play-lnmean" type="button">▶ Show me</button><button class="btn small" data-reveal="w-lnmean" type="button">Show the calculation</button></div>
+        <p class="progress">Excel: <code>=AVERAGE(C2:C13)</code></p>
+      </div>
+      <div class="work" id="w-lnmean" hidden></div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="block" id="lab-s4">
+    <div class="step-h"><span class="step-n">Step 4</span><h3>Back-transform: turn the log-scale mean into mg/L</h3><span class="scale raw">back to mg/L</span></div>
+    <div class="split">
+      <div class="col">
+        <p class="prose">You transformed with <b>ln</b>, so you undo it with <b>eˣ</b>: raise e to the power of your log-scale mean. The answer is called the <b>geometric mean</b>.</p>
+        <div class="howto">
+          <span class="lbl">This calculator</span><span class="keys"><span class="kc fnk">eˣ</span><span class="kc">your mean from Step 3</span><span class="kc">)</span><span class="kc eq">=</span></span>
+          <span class="lbl">Windows</span><span class="keys"><span class="kc">e</span><span class="kc fnk">xʸ</span><span class="kc">your mean</span><span class="kc eq">=</span></span>
+          <span class="lbl">Excel</span><span><code>=EXP(D2)</code></span>
+        </div>
+        <div class="answer-line"><label for="a-gm">Geometric mean =</label><input class="ans" id="a-gm" inputmode="decimal" autocomplete="off" data-label="Geometric mean"><span>mg/L</span></div>
+        <span class="fb" id="f-gm"></span>
+        <div class="btnrow"><button class="btn small" id="play-gm" type="button">▶ Show me</button><button class="btn small" data-reveal="w-gm" type="button">Show the calculation</button></div>
+        <div class="work" id="w-gm" hidden></div>
+      </div>
+      <div class="col">
+        <div class="chartbox"><svg class="chart" id="g-means" viewBox="0 0 340 200" role="img" aria-label="Raw CRP values with arithmetic and geometric means marked"></svg></div>
+        <div class="legend"><span><i style="background:var(--exp)"></i>Arithmetic mean 4.22</span><span><i style="background:var(--accent)"></i>Geometric mean 2.36</span></div>
+      </div>
+    </div>
+
+    <div class="why">
+      <h3>Why is the geometric mean smaller than the arithmetic mean?</h3>
+      <div class="chartbox"><svg class="chart map" id="g-map" viewBox="0 0 560 250" role="img" aria-label="Each patient's ln value on a top scale, connected to its mg/L value on a bottom scale"></svg></div>
+      <div class="cols3">
+        <div class="mini"><h3>1 · Top line</h3><p>Each patient's ln(CRP). On this scale the dots are evenly spread. The highest patient (18.5 mg/L) is only 2.92, not far from everyone else.</p></div>
+        <div class="mini"><h3>2 · Grey lines</h3><p>eˣ carries each value back down to mg/L. The lines fan out to the right: eˣ stretches the high values far apart.</p></div>
+        <div class="mini"><h3>3 · Thick line</h3><p>The average on the ln scale (0.857) comes down to <b>2.36 mg/L</b>. The arithmetic mean (4.22) is higher because in mg/L the two high patients pull hard on it.</p></div>
+      </div>
+      <div class="mini-ex">
+        <h3>Try it with three patients</h3>
+        <p class="small">CRP values of 1, 10 and <b class="mono" id="mx-v">100</b> mg/L. Drag the slider to change the highest patient.</p>
+        <input type="range" id="mx" min="20" max="40" step="1" value="20" aria-label="CRP of the highest patient">
+        <div class="mx-cols">
+          <div class="mx am"><span class="k">Arithmetic mean</span><span class="mono" id="mx-am"></span><span class="mono small" id="mx-amw"></span></div>
+          <div class="mx gm"><span class="k">Geometric mean (via logs)</span><span class="mono" id="mx-gm"></span><span class="mono small" id="mx-gmw"></span></div>
+        </div>
+        <p class="small">As the highest value grows, the arithmetic mean races upward but the geometric mean barely moves. (This example uses log₁₀ for easy numbers; ln works exactly the same way.)</p>
+      </div>
+      <p class="rule"><b>Key idea:</b> back-transforming the mean of the logs does not give back the ordinary mean. It gives the <b>geometric mean</b>, a typical value that one or two very high patients can't drag upward.</p>
+      <details><summary style="cursor:pointer;font-weight:700">For the curious: another way to get the geometric mean</summary>
+        <div class="work" id="w-gm2" style="margin-top:8px"></div>
+      </details>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="block" id="lab-s5">
+    <div class="step-h"><span class="step-n">Step 5</span><h3>Confidence interval: calculate on the log scale, then back-transform the limits</h3><span class="scale both">ln → mg/L</span></div>
+    <p class="prose">The rule: do all the CI maths with the <b>ln values</b>, and only back-transform the two final limits. Work left to right.</p>
+    <div class="givens">
+      <div><span class="k">Mean of ln(CRP)</span><span class="v">0.8571</span><span class="small">from Step 3</span></div>
+      <div><span class="k">SD of ln(CRP)</span><span class="v">1.1205</span><span class="small">given · <code>=STDEV.S()</code></span></div>
+      <div><span class="k">t* (95%, df = 11)</span><span class="v">2.201</span><span class="small">from the t-table</span></div>
+    </div>
+    <div class="flow">
+      <div class="fcol">
+        <div class="cmp-h"><b>① Standard error</b><span class="scale ln">log scale</span></div>
+        <div class="qa"><label for="a-se"><b>a.</b> SE = <span class="mono">1.1205 ÷ √12</span></label>
+          <div class="qrow"><input class="ans" id="a-se" inputmode="decimal" autocomplete="off" data-label="a. SE"><button class="btn small" type="button" data-play="1 . 1 2 0 5 / sqrt 1 2 ) =">▶ Show me</button></div>
+          <span class="fb" id="f-se"></span></div>
+      </div>
+      <div class="farrow" aria-hidden="true">→</div>
+      <div class="fcol">
+        <div class="cmp-h"><b>② Limits</b><span class="scale ln">log scale</span></div>
+        <div class="qa"><label for="a-lo"><b>b.</b> Lower = <span class="mono">0.8571 − 2.201 × SE</span></label>
+          <div class="qrow"><input class="ans" id="a-lo" inputmode="decimal" autocomplete="off" data-label="b. Lower limit (ln)"><button class="btn small" type="button" data-play="0 . 8 5 7 1 - 2 . 2 0 1 * 0 . 3 2 3 5 =">▶ Show me</button></div>
+          <span class="fb" id="f-lo"></span></div>
+        <div class="qa"><label for="a-hi"><b>c.</b> Upper = <span class="mono">0.8571 + 2.201 × SE</span></label>
+          <div class="qrow"><input class="ans" id="a-hi" inputmode="decimal" autocomplete="off" data-label="c. Upper limit (ln)"><button class="btn small" type="button" data-play="0 . 8 5 7 1 + 2 . 2 0 1 * 0 . 3 2 3 5 =">▶ Show me</button></div>
+          <span class="fb" id="f-hi"></span></div>
+      </div>
+      <div class="farrow" aria-hidden="true">eˣ →</div>
+      <div class="fcol">
+        <div class="cmp-h"><b>③ Back-transform</b><span class="scale raw">mg/L</span></div>
+        <div class="qa"><label for="a-elo"><b>d.</b> Lower = <span class="mono">e^(lower)</span></label>
+          <div class="qrow"><input class="ans" id="a-elo" inputmode="decimal" autocomplete="off" data-label="d. Lower limit (mg/L)"><button class="btn small" type="button" data-play="ex 0 . 1 4 5 1 ) =">▶ Show me</button></div>
+          <span class="fb" id="f-elo"></span></div>
+        <div class="qa"><label for="a-ehi"><b>e.</b> Upper = <span class="mono">e^(upper)</span></label>
+          <div class="qrow"><input class="ans" id="a-ehi" inputmode="decimal" autocomplete="off" data-label="e. Upper limit (mg/L)"><button class="btn small" type="button" data-play="ex 1 . 5 6 9 1 ) =">▶ Show me</button></div>
+          <span class="fb" id="f-ehi"></span></div>
+      </div>
+    </div>
+    <div class="btnrow"><button class="btn small" data-reveal="w-ci" type="button">Show the full calculation</button></div>
+    <div class="work" id="w-ci" hidden></div>
+
+    <div class="why">
+      <h3>Why is the interval lopsided in mg/L?</h3>
+      <div class="chartbox"><svg class="chart map" id="g-map-ci" viewBox="0 0 560 250" role="img" aria-label="The confidence interval on the ln scale mapped down to the mg/L scale"></svg></div>
+      <p class="prose">On the ln scale (top) the interval is the same size on both sides of the mean: ± 0.71. eˣ stretches bigger values more than smaller ones, so after back-transforming the upper side stretches to <b>2.45 mg/L</b> above the geometric mean while the lower side is only <b>1.20 mg/L</b> below it. Back-transformed intervals are always lopsided like this, and they can never go below 0.</p>
+    </div>
+    <div class="callout warn">
+      <b>Common mistake: back-transforming the standard error</b>
+      <p style="font-size:.93rem">e<sup>SE</sup> = e<sup>0.3235</sup> = 1.38, but that number has no meaning in mg/L. Building a CI as "mean ± t* × 1.38" gives the wrong interval. Always finish the CI on the ln scale first, then back-transform only the two limits.</p>
+    </div>
+  </div>
+
+  <div class="callout try">
+    <span class="tag">Things to try</span>
+    <ul>
+      <li>Compare both means with the risk groups (below 1, 1 to 3, above 3 mg/L). Which group does each one put a "typical" patient in? Which mean describes this group better?</li>
+      <li>In "Try it with three patients", drag the highest value all the way up. Which mean changes more, and why?</li>
+      <li>Calculate e<sup>0.3235</sup> (the SE back-transformed). Why doesn't that number make sense in mg/L?</li>
+      <li>Look at the interval diagram. Why does the interval stretch further above the geometric mean than below it?</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ CALCULATOR ============ -->
+<aside class="calc" id="calc" aria-label="Scientific calculator" tabindex="-1">
+  <div class="calc-head"><h2>Scientific calculator</h2><button class="btn small calc-close" id="calc-close">Close</button></div>
+  <div class="screen" aria-live="polite">
+    <div class="expr" id="c-expr"></div>
+    <div class="res" id="c-res">0</div>
+    <div class="rnd" id="c-rnd"></div>
+  </div>
+  <div class="pad" id="pad"></div>
+  <div class="sendbar">
+    <span class="t" id="c-target">Click an answer box, then send the result to it.</span>
+    <button class="btn primary" id="c-send" disabled>Use this value</button>
+  </div>
+  <div class="hist"><h3>History · click to reuse</h3><div id="c-hist" style="display:flex;flex-direction:column"></div></div>
+</aside>
+</div>
+<button class="btn primary calc-fab" id="calc-fab">Calculator</button>
+
+<script>
+(()=>{
+const NS='http://www.w3.org/2000/svg';
+/* ---------------- data ---------------- */
+const CRP=[0.4,0.7,0.9,1.2,1.5,1.9,2.4,3.1,4.2,6.0,9.8,18.5];
+const LNV=CRP.map(Math.log);
+const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+const sd=a=>{const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(a.length-1))};
+const skew=a=>{const n=a.length,m=mean(a),s=sd(a);return n/((n-1)*(n-2))*a.reduce((t,v)=>t+((v-m)/s)**3,0)};
+const AM=mean(CRP), LNM=mean(LNV), GM=Math.exp(LNM), LNSD=sd(LNV);
+const SE=1.1205/Math.sqrt(12), TSTAR=2.201;
+const LO=0.8571-TSTAR*0.3235, HI=0.8571+TSTAR*0.3235;
+const f4=v=>(Math.round(v*1e4)/1e4).toFixed(4);
+const fmtMinus=s=>String(s).replace(/-/g,'−');
+
+/* ---------------- keycaps ---------------- */
+const KEYLABEL={ex:'eˣ','10x':'10ˣ',ln:'ln',log:'log',x2:'x²',sqrt:'√',pow:'xʸ','(':'(',')':')','/':'÷','*':'×','-':'−','+':'+','=':'=',e:'e',ans:'Ans',C:'C',back:'⌫','.':'.'};
+const isFn=k=>['ex','10x','ln','log','x2','sqrt','pow'].includes(k);
+function keycaps(seq){
+  return seq.split(' ').map(k=>{
+    const cls=k==='='?'kc eq':isFn(k)?'kc fnk':'kc';
+    return `<span class="${cls}">${KEYLABEL[k]??k}</span>`;
+  }).join('');
+}
+document.querySelectorAll('[data-keys]').forEach(el=>el.innerHTML=keycaps(el.dataset.keys));
+const digitsOf=v=>String(v).split('').map(ch=>ch==='-'?'-':ch).join(' ');
+
+/* ---------------- calculator ---------------- */
+const PAD=[
+ ['ln','ln','fnk k-ln'],['log','log','fnk k-log'],['ex','eˣ','fnk k-ex'],['10x','10ˣ','fnk k-10x'],['C','C','fnk'],
+ ['x2','x²','fnk'],['sqrt','√','fnk'],['pow','xʸ','fnk'],['(','(','fnk'],[')',')','fnk'],
+ ['7','7',''],['8','8',''],['9','9',''],['/','÷','fnk'],['back','⌫','fnk'],
+ ['4','4',''],['5','5',''],['6','6',''],['*','×','fnk'],['e','e','fnk'],
+ ['1','1',''],['2','2',''],['3','3',''],['-','−','fnk'],['ans','Ans','fnk'],
+ ['0','0','wide'],['.','.',''],['+','+','fnk'],['=','=','eq']
+];
+const padEl=document.getElementById('pad');
+const btnFor={};
+PAD.forEach(([k,l,c])=>{const b=document.createElement('button');b.type='button';b.textContent=l;b.className=c;b.dataset.k=k;b.setAttribute('aria-label',{ex:'e to the x','10x':'10 to the x',x2:'square',sqrt:'square root',pow:'power',back:'backspace',ans:'previous answer','/':'divide','*':'times','-':'minus'}[k]||l);padEl.appendChild(b);btnFor[k]=b;});
+
+let toks=[], ans=0, justEval=false, lastRes=null, hist=[];
+const exprEl=document.getElementById('c-expr'),resEl=document.getElementById('c-res'),rndEl=document.getElementById('c-rnd'),histEl=document.getElementById('c-hist');
+const show=t=>t.d;
+function render(){
+  exprEl.textContent=toks.map(show).join('')||' ';
+  if(!justEval){
+    // live preview
+    try{ if(toks.length){const v=evaluate(toks);resEl.textContent=fmt(v);resEl.classList.remove('err');rndEl.textContent='';resEl.style.opacity=.55;} else {resEl.textContent='0';resEl.style.opacity=.55;rndEl.textContent='';} }
+    catch(e){resEl.textContent='…';resEl.classList.remove('err');resEl.style.opacity=.55;rndEl.textContent='';}
+  }
+}
+function fmt(v){
+  if(!isFinite(v)) throw new Error('Result is too large');
+  if(v!==0&&(Math.abs(v)>=1e10||Math.abs(v)<1e-6)) return fmtMinus(v.toExponential(6));
+  return fmtMinus(String(parseFloat(v.toPrecision(10))));
+}
+const last=()=>toks[toks.length-1];
+function push(t){toks.push(t)}
+function press(k){
+  if(justEval){
+    if(['+','-','*','/','pow','x2'].includes(k)){toks=[{t:'const',v:'ans',d:'Ans'}];}
+    else if(k!=='='&&k!=='back'){toks=[];}
+    justEval=false; resEl.classList.remove('err');
+  }
+  if(/^[0-9.]$/.test(k)){
+    const L=last();
+    if(L&&L.t==='num'&&!L.locked){ if(k==='.'&&L.v.includes('.'))return; L.v+=k;L.d=L.v; }
+    else push({t:'num',v:k==='.'?'0.':k,d:k==='.'?'0.':k});
+  }
+  else if(k==='+'||k==='-'||k==='*'||k==='/'){const map={'+':'+','-':'−','*':'×','/':'÷'};push({t:'op',v:k,d:map[k]});}
+  else if(k==='pow'){push({t:'op',v:'^',d:'^'});}
+  else if(k==='x2'){push({t:'op',v:'^',d:'^'});push({t:'num',v:'2',d:'2',locked:true});}
+  else if(k==='('){push({t:'lp',d:'('});}
+  else if(k===')'){push({t:'rp',d:')'});}
+  else if(k==='ln'||k==='log'||k==='sqrt'){push({t:'fn',v:k,d:(k==='sqrt'?'√':k)+'('});}
+  else if(k==='ex'){push({t:'const',v:'e',d:'e'});push({t:'op',v:'^',d:'^'});push({t:'lp',d:'('});}
+  else if(k==='10x'){push({t:'num',v:'10',d:'10',locked:true});push({t:'op',v:'^',d:'^'});push({t:'lp',d:'('});}
+  else if(k==='e'){push({t:'const',v:'e',d:'e'});}
+  else if(k==='ans'){push({t:'const',v:'ans',d:'Ans'});}
+  else if(k==='C'){toks=[];lastRes=null;resEl.textContent='0';rndEl.textContent='';resEl.classList.remove('err');updateSend();}
+  else if(k==='back'){
+    const L=last(); if(!L)return;
+    if(L.t==='num'&&!L.locked&&L.v.length>1){L.v=L.v.slice(0,-1);L.d=L.v;}
+    else { toks.pop(); // remove macro pieces together
+      const P=last(); if(L.t==='lp'&&P&&P.t==='op'&&P.v==='^'){const Q=toks[toks.length-2]; if(Q&&((Q.t==='const'&&Q.v==='e')||(Q.t==='num'&&Q.locked))){toks.pop();toks.pop();}}
+      if(L.t==='num'&&L.locked&&P&&P.t==='op'){toks.pop();}
+    }
+  }
+  else if(k==='='){ return equals(); }
+  render();
+}
+function equals(){
+  if(!toks.length)return;
+  // auto-close brackets
+  let depth=0; toks.forEach(t=>{if(t.t==='lp'||t.t==='fn')depth++; if(t.t==='rp')depth--;});
+  while(depth-->0) toks.push({t:'rp',d:')'});
+  const exprText=toks.map(show).join('');
+  exprEl.textContent=exprText+' =';
+  resEl.style.opacity=1;
+  try{
+    const v=evaluate(toks); const s=fmt(v);
+    resEl.textContent=s; resEl.classList.remove('err');
+    rndEl.textContent='Rounded to 4 decimal places: '+fmtMinus(f4(v));
+    ans=v; lastRes=v; hist.unshift({e:exprText,v}); hist=hist.slice(0,8); renderHist();
+  }catch(e){ resEl.textContent=e.message; resEl.classList.add('err'); rndEl.textContent=''; lastRes=null; }
+  justEval=true; updateSend();
+}
+function renderHist(){
+  histEl.innerHTML='';
+  hist.forEach(h=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span>${h.e} =</span> ${fmt(h.v)}`;b.addEventListener('click',()=>{toks=[{t:'num',v:String(parseFloat(h.v.toPrecision(10))),d:fmtMinus(String(parseFloat(h.v.toPrecision(10)))),locked:true}];justEval=false;render();});histEl.appendChild(b);});
+}
+/* recursive-descent evaluator */
+function evaluate(tokens){
+  let i=0;
+  const peek=()=>tokens[i];
+  const startsPrimary=t=>t&&(t.t==='num'||t.t==='const'||t.t==='fn'||t.t==='lp');
+  function expr(){ let v=term(); while(peek()&&peek().t==='op'&&(peek().v==='+'||peek().v==='-')){const o=tokens[i++].v;const r=term();v=o==='+'?v+r:v-r;} return v; }
+  function term(){ let v=unary();
+    while(true){ const t=peek();
+      if(t&&t.t==='op'&&(t.v==='*'||t.v==='/')){i++;const r=unary(); if(t.v==='/'&&r===0)throw new Error("Can't divide by zero"); v=t.v==='*'?v*r:v/r;}
+      else if(startsPrimary(t)){ v=v*unary(); }
+      else break; }
+    return v; }
+  function unary(){ const t=peek(); if(t&&t.t==='op'&&t.v==='-'){i++;return -unary();} if(t&&t.t==='op'&&t.v==='+'){i++;return unary();} return power(); }
+  function power(){ const b=primary(); const t=peek(); if(t&&t.t==='op'&&t.v==='^'){i++;const ex=unary();return Math.pow(b,ex);} return b; }
+  function closer(){ const t=peek(); if(t&&t.t==='rp')i++; }
+  function primary(){
+    const t=tokens[i++];
+    if(!t) throw new Error('Unfinished: add a number');
+    if(t.t==='num'){const v=parseFloat(t.v); if(isNaN(v))throw new Error('Not a number'); return v;}
+    if(t.t==='const') return t.v==='e'?Math.E:ans;
+    if(t.t==='lp'){const v=expr();closer();return v;}
+    if(t.t==='fn'){const v=expr();closer();
+      if(t.v==='ln'){ if(v<=0) throw new Error('ln is undefined for 0 and negative numbers'); return Math.log(v);}
+      if(t.v==='log'){ if(v<=0) throw new Error('log is undefined for 0 and negative numbers'); return Math.log10(v);}
+      if(t.v==='sqrt'){ if(v<0) throw new Error("Can't take the square root of a negative number"); return Math.sqrt(v);} }
+    throw new Error('Check the expression: something is missing');
+  }
+  const v=expr(); if(i<tokens.length) throw new Error('Check the expression: extra symbols');
+  return v;
+}
+padEl.addEventListener('click',e=>{const b=e.target.closest('button');if(b)press(b.dataset.k);});
+document.getElementById('calc').addEventListener('keydown',e=>{
+  if(e.target.matches('input'))return;
+  const m={'Enter':'=','=':'=','Backspace':'back','Escape':'C','^':'pow','(':'(',')':')','+':'+','-':'-','*':'*','/':'/','.':'.'};
+  let k=m[e.key]; if(/^[0-9]$/.test(e.key))k=e.key; if(e.key==='l')k='ln'; if(e.key==='e')k='e';
+  if(k){e.preventDefault();press(k);flash(k);}
+});
+
+/* send result to the last focused answer box */
+let target=null;
+const sendBtn=document.getElementById('c-send'), targetEl=document.getElementById('c-target');
+document.addEventListener('focusin',e=>{ if(e.target.matches('input.ans')){ if(target)target.classList.remove('target'); target=e.target; target.classList.add('target'); targetEl.innerHTML='Sending to: <b>'+(target.dataset.label||'answer box')+'</b>'; updateSend(); }});
+function updateSend(){ sendBtn.disabled=!(target&&lastRes!==null); }
+sendBtn.addEventListener('click',()=>{ if(!target||lastRes===null)return; target.value=f4(lastRes); target.dispatchEvent(new Event('input',{bubbles:true})); if(window.innerWidth<=1000) document.body.classList.remove('calc-open'); target.focus({preventScroll:false}); });
+
+/* play a key sequence */
+let playing=null;
+function flash(k){const b=btnFor[k]; if(!b)return; b.classList.add('flash'); setTimeout(()=>b.classList.remove('flash'),260);}
+function play(seq){
+  if(playing) clearTimeout(playing);
+  if(window.innerWidth<=1000) document.body.classList.add('calc-open');
+  const ks=['C',...seq.split(' ')]; let j=0;
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const step=()=>{ if(j>=ks.length){playing=null;return;} const k=ks[j++]; press(k); flash(k); playing=setTimeout(step,reduce?120:(ks.length>24?140:520)); };
+  step();
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-play]'); if(b){play(b.dataset.play);} const r=e.target.closest('[data-reveal]'); if(r){const w=document.getElementById(r.dataset.reveal); w.hidden=!w.hidden; r.textContent=w.hidden?r.textContent.replace('Hide','Show'):r.textContent.replace('Show','Hide');}});
+document.getElementById('calc-fab').addEventListener('click',()=>document.body.classList.add('calc-open'));
+document.getElementById('calc-close').addEventListener('click',()=>document.body.classList.remove('calc-open'));
+
+/* ---------------- answer checking ---------------- */
+const parseNum=s=>{ if(s==null)return NaN; s=String(s).trim().replace(/−/g,'-').replace(/,/g,''); if(s===''||s==='-'||s==='.')return NaN; return Number(s); };
+const close=(v,t,tolAbs=0.006,tolRel=0.003)=>Math.abs(v-t)<=Math.max(tolAbs,tolRel*Math.abs(t));
+function judge(v,truth,wrongs,raw){
+  if(isNaN(v)) return null;
+  if(close(v,truth)){ const parts=String(raw??'').trim().split('.'); const d=parts[1]?parts[1].length:0;
+    return {ok:true,msg:'Correct',note:(raw!==undefined&&d!==4)?'Right value. Write it with 4 decimal places: '+fmtMinus(f4(truth)):''}; }
+  for(const w of wrongs||[]){ if(w.v!==undefined&&close(v,w.v)) return {ok:false,msg:w.msg}; }
+  return {ok:false,msg:'Not quite. Press “Show me” to watch the key presses, and check the top line of the calculator.'};
+}
+function setFb(el,res){ if(!res){el.innerHTML='';el.className='fb';return;} el.className='fb '+(res.ok?'ok':'no'); el.innerHTML=(res.ok?'<span class="pill ok">✓ Correct</span>'+(res.note?' <span style="color:var(--muted)">'+res.note+'</span>':''):'<span class="pill no">✗</span> '+res.msg); }
+
+/* ---------------- function activities ---------------- */
+const ACTS={
+  exp:{xs:[1,1.5,2,2.5],f:Math.exp,seq:x=>'ex '+digitsOf(x)+' ) =',head:'y = eˣ',
+       wrongs:x=>[{v:2**x,msg:'That is 2ˣ. The base must be e (2.718…), so use the eˣ key.'},{v:10**x,msg:'That is 10ˣ. Use the eˣ key instead.'},{v:Math.log(x),msg:'That is ln(x), the opposite operation. You need e raised to the power x: press eˣ.'},{v:Math.E*x,msg:'That is e × x. You need e raised to the power x: press eˣ (or e then xʸ).'},{v:x**Math.E,msg:'That is x raised to the power e. Flip it around: e is the base, x is the power.'}],
+       plot:{x0:-1,x1:3,y0:0,y1:14,xt:1,yt:2,fn:Math.exp,lbl:'eˣ'}},
+  log10:{xs:[1,2,3,4,5],f:Math.log10,seq:x=>'log '+digitsOf(x)+' ) =',head:'y = log₁₀(x)',
+       wrongs:x=>[{v:Math.log(x),msg:'That is ln(x), the natural log. For base 10 use the log key.'},{v:10**x,msg:'That is 10ˣ, the opposite operation. Use the log key.'}],
+       plot:{x0:0,x1:6,y0:-0.5,y1:5.5,xt:1,yt:1,fn:Math.log10,lbl:'log₁₀(x)'}},
+  ln:{xs:[1,2,3,4,5],f:Math.log,seq:x=>'ln '+digitsOf(x)+' ) =',head:'y = ln(x)',
+       wrongs:x=>[{v:Math.log10(x),msg:'That is log base 10. For the natural log use the ln key.'},{v:Math.exp(x),msg:'That is eˣ, the opposite operation. Use the ln key.'}],
+       plot:{x0:0,x1:6,y0:-1,y1:5.5,xt:1,yt:1,fn:Math.log,lbl:'ln(x)'}}
+};
+const answers={exp:{},log10:{},ln:{}};
+Object.entries(ACTS).forEach(([key,A])=>{
+  const t=document.getElementById('t-'+key);
+  t.innerHTML=`<thead><tr><th>x</th><th>Keys to press</th><th>${A.head}<span class="dp">4 decimal places</span></th><th></th></tr></thead><tbody>`+
+   A.xs.map((x,i)=>`<tr><td class="mono"><b>${x}</b></td><td><span class="keys">${keycaps(A.seq(x))}</span></td>
+     <td><input class="ans" id="in-${key}-${i}" inputmode="decimal" autocomplete="off" data-label="${A.head} at x = ${x}"><div class="fb" id="fb-${key}-${i}"></div></td>
+     <td><div class="btnrow"><button class="btn small" data-play="${A.seq(x)}">▶ Show me</button><button class="btn small" data-why="${key}-${i}">What does it mean?</button></div></td></tr>
+     <tr class="why" id="why-${key}-${i}" hidden><td></td><td colspan="3"><div class="reveal"></div></td></tr>`).join('')+'</tbody>';
+  A.xs.forEach((x,i)=>{
+    const inp=document.getElementById(`in-${key}-${i}`), fb=document.getElementById(`fb-${key}-${i}`);
+    inp.addEventListener('input',()=>{ const v=parseNum(inp.value); answers[key][i]=isNaN(v)?undefined:v; setFb(fb,judge(v,A.f(x),A.wrongs(x),inp.value)); drawAct(key); progress(key); });
+  });
+  drawAct(key); progress(key);
+});
+/* "Check it" shows what the calculation means, both directions */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-why]'); if(!b)return;
+  const [key,i]=b.dataset.why.split('-'); const x=ACTS[key].xs[+i]; const row=document.getElementById(`why-${key}-${i}`); const box=row.querySelector('.reveal');
+  let html='';
+  if(key==='exp') html=`<span class="eqn">e^${x} = 2.71828^${x} = ${f4(Math.exp(x))}</span><span>Check by undoing it: <span class="eqn">ln(${f4(Math.exp(x))}) = ${f4(Math.log(+f4(Math.exp(x))))}</span>, which gives back x = ${x}.</span>`;
+  if(key==='log10') html=`<span class="eqn">log₁₀(${x}) = ${f4(Math.log10(x))}</span><span>Meaning: <span class="eqn">10^${f4(Math.log10(x))} = ${x}</span>. Ten raised to this power gives back ${x}.</span>`;
+  if(key==='ln') html=`<span class="eqn">ln(${x}) = ${f4(Math.log(x))}</span><span>Meaning: <span class="eqn">e^${f4(Math.log(x))} = ${x}</span>. e raised to this power gives back ${x}.</span>`;
+  box.innerHTML=html; row.hidden=!row.hidden; b.textContent=row.hidden?'What does it mean?':'Hide';
+});
+function progress(key){
+  const A=ACTS[key]; const n=A.xs.filter((x,i)=>answers[key][i]!==undefined&&close(answers[key][i],A.f(x))).length;
+  document.getElementById('pr-'+key).innerHTML=`<b>${n} of ${A.xs.length}</b> correct${n===A.xs.length?' · all dots are on the curve.':''}`;
+}
+
+/* ---------------- charts ---------------- */
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function tickFmt(v){return fmtMinus(String(parseFloat(v.toFixed(4))));}
+function funcPlot(svg,P,points,extras){
+  svg.innerHTML='';
+  const W=560,H=320,m={l:46,r:16,t:14,b:34};
+  const sx=x=>m.l+(x-P.x0)/(P.x1-P.x0)*(W-m.l-m.r), sy=y=>H-m.b-(y-P.y0)/(P.y1-P.y0)*(H-m.t-m.b);
+  const g=el('g',{},svg);
+  for(let x=Math.ceil(P.x0/P.xt)*P.xt;x<=P.x1+1e-9;x+=P.xt){el('line',{x1:sx(x),x2:sx(x),y1:sy(P.y0),y2:sy(P.y1),class:'grid'},g);const t=el('text',{x:sx(x),y:H-m.b+16,'text-anchor':'middle'},g);t.textContent=tickFmt(x);}
+  for(let y=Math.ceil(P.y0/P.yt-1e-9)*P.yt;y<=P.y1+1e-9;y+=P.yt){el('line',{x1:sx(P.x0),x2:sx(P.x1),y1:sy(y),y2:sy(y),class:'grid'},g);const t=el('text',{x:m.l-8,y:sy(y)+4,'text-anchor':'end'},g);t.textContent=tickFmt(y);}
+  if(P.x0<=0&&P.x1>=0) el('line',{x1:sx(0),x2:sx(0),y1:sy(P.y0),y2:sy(P.y1),class:'axis'},g);
+  if(P.y0<=0&&P.y1>=0) el('line',{x1:sx(P.x0),x2:sx(P.x1),y1:sy(0),y2:sy(0),class:'axis'},g);
+  const xl=el('text',{x:W-m.r,y:H-4,'text-anchor':'end'},g); xl.textContent='x';
+  const yl=el('text',{x:m.l+6,y:m.t+10},g); yl.textContent='y';
+  const clip='clip'+svg.id; const cp=el('clipPath',{id:clip},svg); el('rect',{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b},cp);
+  const curve=(fn,cls,label,lx)=>{let d='';const N=300;for(let k=0;k<=N;k++){const x=P.x0+(P.x1-P.x0)*k/N; if(x<=0&&(fn===Math.log||fn===Math.log10))continue; const y=fn(x); if(!isFinite(y))continue; d+=(d?'L':'M')+sx(x).toFixed(1)+','+sy(Math.max(Math.min(y,P.y1+5),P.y0-5)).toFixed(1);} el('path',{d,class:cls,'clip-path':`url(#${clip})`},svg);
+    if(label&&cls==='curve'&&P.lbelow){const ly=fn(P.x1-0.05);const t=el('text',{x:W-m.r-4,y:sy(ly)+18,'text-anchor':'end',class:'lbl-c'},svg);t.textContent=label;return;}
+    if(label){const ly=fn(lx); if(ly<=P.y1&&ly>=P.y0){const t=el('text',{x:sx(lx)+6,y:sy(ly)-6,class:cls==='curve'?'lbl-c':''},svg);t.textContent=label;}}};
+  (extras||[]).forEach(ex=>curve(ex.fn,'ghost',ex.lbl,ex.lx));
+  curve(P.fn,'curve',P.lbl,P.lx??(P.x1-1.2));
+  if(P.marks){
+    curve(x=>x,'refline');
+    const mk=el('marker',{id:'arr'+svg.id,viewBox:'0 0 10 10',refX:'8',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'},el('defs',{},svg));
+    el('path',{d:'M0,0 L10,5 L0,10 z',class:'arrowhead'},mk);
+    points.forEach(p=>{ if(p.y===undefined||!p.ok)return; const ya=sy(p.x), yb=sy(Math.min(Math.max(p.y,P.y0),P.y1)); const dir=yb>ya?1:-1;
+      if(Math.abs(yb-ya)>18) el('line',{x1:sx(p.x),x2:sx(p.x),y1:ya+dir*8,y2:yb-dir*9,class:'move','marker-end':`url(#arr${svg.id})`},svg); });
+    P.marks.forEach(x=>{ if(x<P.y0||x>P.y1)return; el('rect',{x:sx(x)-6,y:sy(x)-6,width:12,height:12,transform:`rotate(45 ${sx(x)} ${sy(x)})`,class:'xmark'},svg); });
+  }
+  points.forEach(p=>{ if(p.y===undefined)return; const yy=Math.max(Math.min(p.y,P.y1),P.y0); el('circle',{cx:sx(p.x),cy:sy(yy),r:6.5,class:'dot'+(p.ok?'':' wrong')},svg); });
+}
+function drawAct(key){
+  const A=ACTS[key]; const pts=A.xs.map((x,i)=>({x,y:answers[key][i],ok:answers[key][i]!==undefined&&close(answers[key][i],A.f(x))}));
+  let extras=[];
+  if(key==='exp'&&document.getElementById('cmp-exp').checked) extras=[{fn:x=>2**x,lbl:'2ˣ',lx:2.6},{fn:x=>10**x,lbl:'10ˣ',lx:0.9}];
+  if(key==='ln'&&document.getElementById('cmp-ln').checked) extras=[{fn:Math.log10,lbl:'log₁₀(x)',lx:4.6}];
+  const P={...A.plot,marks:A.xs,lbelow:key!=='exp'}; if(key==='exp')P.lx=2.55; if(key==='ln')P.lx=4.6;
+  funcPlot(document.getElementById('g-'+key),P,pts,extras);
+}
+document.getElementById('cmp-exp').addEventListener('change',e=>{document.getElementById('cmp-note').hidden=!e.target.checked;drawAct('exp');});
+document.getElementById('cmp-ln').addEventListener('change',()=>drawAct('ln'));
+
+function niceTicks(lo,hi,n=6){const span=hi-lo;const step0=span/n;const mag=10**Math.floor(Math.log10(step0));const st=[1,2,2.5,5,10].map(s=>s*mag).find(s=>span/s<=n)||mag*10;const a=Math.floor(lo/st)*st,b=Math.ceil(hi/st)*st;const out=[];for(let v=a;v<=b+st*1e-6;v+=st)out.push(+v.toFixed(10));return {ticks:out,lo:a,hi:b};}
+function dotPlot(svg,vals,opts={}){
+  svg.innerHTML='';
+  const vb=svg.viewBox.baseVal; const W=vb.width,H=vb.height,m={l:20,r:20,b:30};
+  const lo=opts.lo??Math.min(...vals), hi=opts.hi??Math.max(...vals);
+  const T=niceTicks(lo,hi); const sx=v=>m.l+(v-T.lo)/(T.hi-T.lo)*(W-m.l-m.r);
+  const base=H-m.b;
+  el('line',{x1:m.l,x2:W-m.r,y1:base,y2:base,class:'axis'},svg);
+  T.ticks.forEach(t=>{el('line',{x1:sx(t),x2:sx(t),y1:base,y2:base+5,class:'axis'},svg);const tx=el('text',{x:sx(t),y:base+19,'text-anchor':'middle'},svg);tx.textContent=tickFmt(t);});
+  if(opts.unit){const u=el('text',{x:W-m.r,y:12,'text-anchor':'end'},svg);u.textContent=opts.unit;}
+  if(opts.ci){ el('rect',{x:sx(opts.ci[0]),y:14,width:sx(opts.ci[1])-sx(opts.ci[0]),height:base-14,class:'ci'},svg); }
+  const placed=[]; const r=7;
+  [...vals].sort((a,b)=>a-b).forEach(v=>{const x=sx(v);let lvl=0;while(placed.some(p=>p.l===lvl&&Math.abs(p.x-x)<r*2))lvl++;placed.push({x,l:lvl});el('circle',{cx:x,cy:base-r-2-lvl*(r*2+1),r,class:'dot',style:'fill:var(--ink);opacity:.75'},svg);});
+  (opts.lines||[]).forEach(L=>{el('line',{x1:sx(L.v),x2:sx(L.v),y1:18,y2:base,class:'meanline '+L.cls},svg);const t=el('text',{x:sx(L.v)+5,y:L.row?46:28,'text-anchor':L.anchor||'start',class:L.cls,style:'stroke:none;font-weight:600'},svg);t.textContent=L.label;});
+}
+
+/* overview transformation demo: 400 simulated CRP values (log-normal), seeded so everyone sees the same data */
+const BIG=(()=>{let sd0=20261019;const rnd=()=>{sd0=(Math.imul(sd0,1664525)+1013904223)>>>0;return sd0/4294967296;};const out=[];for(let i=0;i<400;i++){const u=rnd()||1e-9,v=rnd();const z=Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);out.push(Math.max(0.05,Math.round(Math.exp(0.8+0.95*z)*100)/100));}return out;})();
+const TRANS={raw:{f:v=>v,n:'none',u:'CRP (mg/L)'},x2:{f:v=>v*2,n:'2 × x',u:'2 × CRP'},p5:{f:v=>v+5,n:'x + 5',u:'CRP + 5'},sqrt:{f:Math.sqrt,n:'√x',u:'√CRP'},log10:{f:Math.log10,n:'log₁₀(x)',u:'log₁₀(CRP)'},ln:{f:Math.log,n:'ln(x)',u:'ln(CRP)'},inv:{f:v=>1/v,n:'1 / x',u:'1 / CRP'}};
+const NOTES={raw:'Original CRP for 400 adults. Most people are low, with a long tail of high values stretching right. The dashed normal curve does not fit at all.',
+ x2:'Linear: every value doubled. The numbers on the x-axis changed, but the bars keep exactly the same shape and the skewness is unchanged (2.85).',
+ p5:'Linear: 5 added to every value. The data just slid to the right; the shape and skewness are identical.',
+ sqrt:'√x pulls in the long tail. Better (skewness 1.23), but still clearly right-skewed.',
+ log10:'log₁₀ evens out the spacing. The bars now follow the normal curve closely (skewness 0.05).',
+ ln:'ln gives exactly the same shape as log₁₀, just on a different scale. This is the transformation you will use in the lab.',
+ inv:'1/x over-corrects: the smallest CRP values become the biggest numbers, so a new long tail forms (skewness 1.87). A stronger transformation is not always better.'};
+const NB=22, HW=560, HH=270, HM={l:48,r:14,t:14,b:44};
+const hsvg=document.getElementById('ov-chart');
+const gAx=el('g',{},hsvg), gBars=el('g',{},hsvg), gCurve=el('g',{},hsvg);
+const bars=[];for(let i=0;i<NB;i++)bars.push(el('rect',{class:'bar',x:0,y:HH-HM.b,width:0,height:0,rx:2},gBars));
+let cur=bars.map(()=>({x:HM.l,w:0,h:0})), tween=null;
+function ov(t){
+  const vals=BIG.map(TRANS[t].f), m=mean(vals), s=sd(vals);
+  const T=niceTicks(Math.min(...vals),Math.max(...vals),7), bw=(T.hi-T.lo)/NB;
+  const counts=new Array(NB).fill(0); vals.forEach(v=>{counts[Math.min(NB-1,Math.floor((v-T.lo)/bw))]++;});
+  const pdf=x=>vals.length*bw*Math.exp(-(((x-m)/s)**2)/2)/(s*Math.sqrt(2*Math.PI));
+  const peak=Math.max(...counts,pdf(m)); const Y=niceTicks(0,peak*1.05,5);
+  const pw=HW-HM.l-HM.r, ph=HH-HM.t-HM.b;
+  const sx=x=>HM.l+(x-T.lo)/(T.hi-T.lo)*pw, sy=c=>HH-HM.b-c/Y.hi*ph;
+  // axes (redrawn immediately)
+  gAx.innerHTML='';
+  Y.ticks.forEach(c=>{el('line',{x1:HM.l,x2:HW-HM.r,y1:sy(c),y2:sy(c),class:'grid'},gAx);const tx=el('text',{x:HM.l-8,y:sy(c)+4,'text-anchor':'end'},gAx);tx.textContent=c;});
+  T.ticks.forEach(v=>{el('line',{x1:sx(v),x2:sx(v),y1:HH-HM.b,y2:HH-HM.b+5,class:'axis'},gAx);const tx=el('text',{x:sx(v),y:HH-HM.b+18,'text-anchor':'middle'},gAx);tx.textContent=tickFmt(v);});
+  el('line',{x1:HM.l,x2:HW-HM.r,y1:HH-HM.b,y2:HH-HM.b,class:'axis'},gAx);
+  const xl=el('text',{x:HM.l+pw/2,y:HH-6,'text-anchor':'middle',class:'axl'},gAx);xl.textContent=TRANS[t].u;
+  const yl=el('text',{x:14,y:HM.t+ph/2,'text-anchor':'middle',class:'axl',transform:`rotate(-90 14 ${HM.t+ph/2})`},gAx);yl.textContent='Number of patients';
+  // bars: tween from the current shape to the new one
+  const target=counts.map((c,i)=>({x:sx(T.lo+i*bw)+1,w:Math.max(1,pw/NB-2),h:c/Y.hi*ph}));
+  const from=cur.map(o=>({...o}));
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dur=reduce?0:650, t0=performance.now();
+  gCurve.innerHTML='';
+  if(tween)cancelAnimationFrame(tween);
+  const ease=k=>k<.5?2*k*k:1-(-2*k+2)**2/2;
+  const frame=now=>{
+    const k=dur?Math.min(1,(now-t0)/dur):1, e=ease(k);
+    bars.forEach((b,i)=>{const o={x:from[i].x+(target[i].x-from[i].x)*e,w:from[i].w+(target[i].w-from[i].w)*e,h:from[i].h+(target[i].h-from[i].h)*e};cur[i]=o;
+      b.setAttribute('x',o.x.toFixed(1));b.setAttribute('width',o.w.toFixed(1));b.setAttribute('y',(HH-HM.b-o.h).toFixed(1));b.setAttribute('height',o.h.toFixed(1));});
+    if(k<1){tween=requestAnimationFrame(frame);}
+    else{tween=null;let d='';for(let j=0;j<=200;j++){const x=T.lo+(T.hi-T.lo)*j/200;d+=(j?'L':'M')+sx(x).toFixed(1)+','+sy(pdf(x)).toFixed(1);}el('path',{d,class:'normc'},gCurve);}
+  };
+  tween=requestAnimationFrame(frame);
+  const sk=skew(vals);
+  document.getElementById('ov-name').textContent=TRANS[t].n;
+  document.getElementById('ov-skew').textContent=fmtMinus(sk.toFixed(2));
+  document.getElementById('ov-shape').textContent=Math.abs(sk)<0.5?'roughly symmetric':sk>0?'right-skewed':'left-skewed';
+  document.getElementById('ov-note').textContent=NOTES[t];
+  document.querySelectorAll('#ov-seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));
+}
+let seqTimer=null;
+document.getElementById('ov-seg').addEventListener('click',e=>{const b=e.target.closest('button');if(b){clearTimeout(seqTimer);ov(b.dataset.t);}});
+document.getElementById('ov-play').addEventListener('click',()=>{clearTimeout(seqTimer);const order=['raw','sqrt','log10','ln'];let j=0;const go=()=>{ov(order[j++]);if(j<order.length)seqTimer=setTimeout(go,2200);};go();});
+ov('raw');
+
+/* ---------------- lab ---------------- */
+const SWR={before:{W:'0.721',p:'0.001',ok:false,msg:'p is below 0.05, so the raw CRP data are <b>not normal</b>. The t-test assumption fails, so we transform.'},
+           after:{W:'0.988',p:'0.999',ok:true,msg:'p is well above 0.05, so the ln-transformed data <b>look normal</b>. The assumption is now met.'}};
+const swHTML=k=>{const r=SWR[k];return `<div class="sw-nums"><span>W = <b class="mono">${r.W}</b></span><span>p = <b class="mono">${r.p}</b></span><span class="pill ${r.ok?'ok':'no'}">${r.ok?'✓ Normal':'✗ Not normal'}</span></div><p class="small">${r.msg}</p>`;};
+const labState={sw:false,ln:false,lnmean:false,gm:false,se:false,lo:false,hi:false,elo:false,ehi:false};
+function routeUpdate(){
+  const done={'lab-s1':labState.sw,'lab-s2':labState.ln,'lab-s3':labState.lnmean,'lab-s4':labState.gm,'lab-s5':labState.se&&labState.lo&&labState.hi&&labState.elo&&labState.ehi};
+  document.querySelectorAll('.route button').forEach((b,i)=>{const d=done[b.dataset.go];b.classList.toggle('done',d);b.querySelector('.rn').textContent=d?'✓':String(i+1);});
+}
+document.querySelector('.route').addEventListener('click',e=>{const b=e.target.closest('button[data-go]');if(b)document.getElementById(b.dataset.go).scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});});
+
+/* dots stacked into bins, so a small sample still reads as a histogram */
+function dotHist(svg,vals,o){
+  svg.innerHTML='';
+  const vb=svg.viewBox.baseVal,W=vb.width,H=vb.height,m={l:20,r:20,b:30};
+  const nb=Math.round((o.hi-o.lo)/o.bw), pw=W-m.l-m.r, bp=pw/nb, r=Math.min(9,bp/2-3), base=H-m.b, sz=2*r+2;
+  const sx=v=>m.l+(v-o.lo)/(o.hi-o.lo)*pw, bin=v=>Math.min(nb-1,Math.max(0,Math.floor((v-o.lo)/o.bw)));
+  const counts=new Array(nb).fill(0);(o.ghost||vals).forEach(v=>counts[bin(v)]++);
+  counts.forEach((c,b)=>{if(c)el('rect',{x:m.l+bp*b+2,y:base-c*sz-5,width:bp-4,height:c*sz+5,rx:5,class:'hbin'},svg);});
+  el('line',{x1:m.l,x2:W-m.r,y1:base,y2:base,class:'axis'},svg);
+  o.ticks.forEach(t=>{el('line',{x1:sx(t),x2:sx(t),y1:base,y2:base+5,class:'axis'},svg);const tx=el('text',{x:sx(t),y:base+19,'text-anchor':'middle'},svg);tx.textContent=tickFmt(t);});
+  if(o.unit){const u=el('text',{x:W-m.r,y:12,'text-anchor':'end'},svg);u.textContent=o.unit;}
+  const stack=(list,cls)=>{const cnt=new Array(nb).fill(0);list.forEach(v=>{const b=bin(v);el('circle',{cx:m.l+bp*(b+.5),cy:base-r-3-cnt[b]*sz,r,class:cls},svg);cnt[b]++;});};
+  if(o.ghost)stack(o.ghost,'gdot');
+  stack(vals,o.dcls||'pdot');
+  (o.lines||[]).forEach(L=>{el('line',{x1:sx(L.v),x2:sx(L.v),y1:18,y2:base,class:'meanline '+L.cls},svg);const t=el('text',{x:sx(L.v)+5,y:L.row?46:28,class:L.cls,style:'stroke:none;font-weight:600'},svg);t.textContent=L.label;});
+}
+const RAWH={lo:0,hi:20,bw:2,ticks:[0,4,8,12,16,20],unit:'CRP (mg/L)'};
+const LNH={lo:-1.25,hi:3.25,bw:0.75,ticks:[-1,0,1,2,3],unit:'ln(CRP)'};
+dotHist(document.getElementById('g-raw'),CRP,{...RAWH,lines:[{v:AM,cls:'am',label:'arithmetic mean 4.22'}]});
+dotHist(document.getElementById('g-cmp-raw'),CRP,RAWH);
+document.getElementById('sw-before-2').innerHTML=swHTML('before');
+dotHist(document.getElementById('g-means'),CRP,{...RAWH,lines:[{v:GM,cls:'gm',label:'geometric 2.36',row:1},{v:AM,cls:'am',label:'arithmetic 4.22'}]});
+document.getElementById('sw-before-btn').addEventListener('click',e=>{const box=document.getElementById('sw-before');box.innerHTML=swHTML('before');box.hidden=false;e.target.textContent='Test run on raw CRP';e.target.disabled=true;labState.sw=true;routeUpdate();});
+document.getElementById('sw-after-btn').addEventListener('click',e=>{const box=document.getElementById('sw-after');box.innerHTML=swHTML('after');box.hidden=false;e.target.textContent='Test run on ln(CRP)';e.target.disabled=true;});
+
+document.getElementById('w-am').textContent=`(${CRP.join(' + ')}) ÷ 12\n= ${+CRP.reduce((a,b)=>a+b,0).toFixed(4)} ÷ 12\n= ${f4(AM)} mg/L`;
+
+/* patient cards */
+const labAns=[];
+document.getElementById('pgrid').innerHTML=CRP.map((v,i)=>{const seq='ln '+digitsOf(v.toFixed(1))+' ) =';return `<div class="pcard" id="pc-${i}">
+  <div class="ph"><span>Patient ${i+1}</span><span class="mono">${v.toFixed(1)} mg/L</span></div>
+  <span class="keys">${keycaps(seq)}</span>
+  <div class="qrow"><input class="ans" id="in-lab-${i}" inputmode="decimal" autocomplete="off" data-label="ln(CRP), patient ${i+1}"><button class="btn small" type="button" data-play="${seq}" aria-label="Show me patient ${i+1}">▶</button></div>
+  <div class="fb" id="fb-lab-${i}"></div></div>`;}).join('');
+const okLn=i=>labAns[i]!==undefined&&close(labAns[i],Math.log(CRP[i]));
+function labProgress(){
+  const n=CRP.filter((v,i)=>okLn(i)).length;
+  document.getElementById('pr-lab').innerHTML=`<b>${n} of 12</b> correct`;
+  dotHist(document.getElementById('g-cmp-ln'),LNV.filter((v,i)=>okLn(i)),{...LNH,ghost:LNV,dcls:'pdot lnd'});
+  const btn=document.getElementById('sw-after-btn');
+  if(document.getElementById('sw-after').hidden){btn.disabled=n<12;btn.textContent=n<12?`Finish all 12 patients to run the test (${n} of 12)`:'Run the test on ln(CRP)';}
+  labState.ln=n===12;routeUpdate();
+  return n;
+}
+CRP.forEach((v,i)=>{
+  const inp=document.getElementById('in-lab-'+i), fb=document.getElementById('fb-lab-'+i);
+  inp.addEventListener('input',()=>{const x=parseNum(inp.value);labAns[i]=isNaN(x)?undefined:x;
+    const res=judge(x,Math.log(v),[{v:Math.log10(v),msg:'That is log₁₀. This lab uses the natural log: press ln.'},{v:Math.exp(v),msg:'That is eˣ, the back-transformation. Here you need ln.'}],inp.value);
+    setFb(fb,res); document.getElementById('pc-'+i).classList.toggle('ok',!!(res&&res.ok)); labProgress();});
+});
+labProgress();
+document.getElementById('fill-lab').addEventListener('click',()=>{
+  const n=CRP.filter((v,i)=>okLn(i)).length;
+  if(n<4){document.getElementById('pr-lab').innerHTML='<b>'+n+' of 12</b> correct · do at least 4 yourself first.';return;}
+  CRP.forEach((v,i)=>{if(!okLn(i)){const inp=document.getElementById('in-lab-'+i);inp.value=f4(Math.log(v));inp.dispatchEvent(new Event('input'));}});
+});
+
+const lnStr=LNV.map(v=>f4(v));
+document.getElementById('w-lnmean').textContent=`Sum of ln values:\n${lnStr.map(s=>s.startsWith('-')?'('+fmtMinus(s)+')':s).join(' + ')}\n= ${f4(LNV.reduce((a,b)=>a+b,0))}\n\nMean = ${f4(LNV.reduce((a,b)=>a+b,0))} ÷ 12 = ${f4(LNM)}`;
+document.getElementById('play-lnmean').addEventListener('click',()=>play('( '+lnStr.map(s=>digitsOf(s)).join(' + ')+' ) / 1 2 ='));
+document.getElementById('w-gm').textContent=`Geometric mean = e^(mean of ln values)\n               = e^(${f4(LNM)})\n               = ${f4(Math.exp(+f4(LNM)))} mg/L\n\nCompare: arithmetic mean = ${f4(AM)} mg/L`;
+document.getElementById('play-gm').addEventListener('click',()=>play('ex '+digitsOf(f4(LNM))+' ) ='));
+const prod=CRP.reduce((a,b)=>a*b,1);
+document.getElementById('w-gm2').textContent=`Multiply all 12 values together, then take the 12th root:\n(${CRP.join(' × ')})^(1/12)\n= ${prod.toFixed(1)}^(1/12)\n= ${f4(prod**(1/12))} mg/L\n\nSame answer as e^(mean of ln values). That is why it's called the GEOMETRIC mean:\nit averages by multiplying, which suits values that vary by "times as much".`;
+
+const single=(id,truth,wrongs)=>{const inp=document.getElementById('a-'+id),fb=document.getElementById('f-'+id);inp.addEventListener('input',()=>{const r=judge(parseNum(inp.value),truth,wrongs,inp.value);setFb(fb,r);labState[id]=!!(r&&r.ok);routeUpdate();});};
+single('lnmean',LNM,[{v:AM,msg:'That is the arithmetic mean of the raw CRP values. Average the ln values instead.'},{v:Math.log(AM),msg:'That is ln of the raw mean. Take ln of each value first, then average those.'},{v:LNV.reduce((a,b)=>a+b,0),msg:'That is the sum. Now divide by 12.'}]);
+single('gm',GM,[{v:10**LNM,msg:'That used 10ˣ. The data were transformed with ln, so undo it with eˣ.'},{v:Math.E*LNM,msg:'That is e × mean. You need e raised to the power of the mean: press eˣ.'},{v:AM,msg:'That is the arithmetic mean. Back-transform the log-scale mean with eˣ.'}]);
+single('se',SE,[{v:1.1205/12,msg:'You divided by 12. Divide by the square root of 12 (√12 = 3.4641).'},{v:1.1205/Math.sqrt(11),msg:'Use √n = √12, not √11.'}]);
+single('lo',LO,[{v:(0.8571-TSTAR)*0.3235,msg:'Order of operations: multiply 2.201 × SE first, then subtract from the mean.'},{v:0.8571-0.3235,msg:'You subtracted just the SE. Multiply it by t* = 2.201 first.'}]);
+single('hi',HI,[{v:(0.8571+TSTAR)*0.3235,msg:'Order of operations: multiply 2.201 × SE first, then add to the mean.'},{v:0.8571+0.3235,msg:'You added just the SE. Multiply it by t* = 2.201 first.'}]);
+single('elo',Math.exp(LO),[{v:10**LO,msg:'Use eˣ, not 10ˣ.'},{v:GM-TSTAR*Math.exp(0.3235),msg:'That back-transformed the SE. Back-transform the lower limit from b instead.'}]);
+single('ehi',Math.exp(HI),[{v:10**HI,msg:'Use eˣ, not 10ˣ.'},{v:GM+TSTAR*Math.exp(0.3235),msg:'That back-transformed the SE. Back-transform the upper limit from c instead.'}]);
+document.getElementById('w-ci').textContent=
+`a. SE  = SD ÷ √n = 1.1205 ÷ √12 = 1.1205 ÷ 3.4641 = ${f4(SE)}
+b. Lower (ln) = 0.8571 − 2.201 × 0.3235 = 0.8571 − 0.7120 = ${f4(LO)}
+c. Upper (ln) = 0.8571 + 2.201 × 0.3235 = 0.8571 + 0.7120 = ${f4(HI)}
+d. Lower (mg/L) = e^${f4(LO)} = ${f4(Math.exp(LO))}
+e. Upper (mg/L) = e^${f4(HI)} = ${f4(Math.exp(HI))}
+
+95% CI for the geometric mean: ${Math.exp(LO).toFixed(2)} to ${Math.exp(HI).toFixed(2)} mg/L
+Distance below the geometric mean: ${GM.toFixed(2)} − ${Math.exp(LO).toFixed(2)} = ${(GM-Math.exp(LO)).toFixed(2)}
+Distance above the geometric mean: ${Math.exp(HI).toFixed(2)} − ${GM.toFixed(2)} = ${(Math.exp(HI)-GM).toFixed(2)}`.replace(/-(?=\d)/g,'−');
+
+/* two-scale map: ln scale on top, mg/L underneath, each patient joined by a line */
+function mapDiagram(svg,ci){
+  svg.innerHTML='';
+  const W=560,H=250,l=28,r=28,pw=W-l-r,yT=66,yB=176;
+  const tx=v=>l+(v+1.5)/5*pw, bx=v=>l+v/20*pw;
+  const T=(x,y,s,cls,anchor)=>{const t=el('text',{x,y,'text-anchor':anchor||'start',class:cls||''},svg);t.textContent=s;return t;};
+  T(l,16,'ln(CRP), the log scale: where we do the maths','axl lnt');
+  T(l,H-4,'CRP in mg/L: what we report','axl');
+  el('line',{x1:l,x2:W-r,y1:yT,y2:yT,class:'axis'},svg); el('line',{x1:l,x2:W-r,y1:yB,y2:yB,class:'axis'},svg);
+  [-1,0,1,2,3].forEach(t=>{el('line',{x1:tx(t),x2:tx(t),y1:yT-5,y2:yT,class:'axis'},svg);T(tx(t),yT-9,tickFmt(t),'','middle');});
+  [0,5,10,15,20].forEach(t=>{el('line',{x1:bx(t),x2:bx(t),y1:yB,y2:yB+5,class:'axis'},svg);T(bx(t),yB+18,String(t),'','middle');});
+  CRP.forEach((v,i)=>el('line',{x1:tx(LNV[i]),y1:yT,x2:bx(v),y2:yB,class:'link'+(ci?' faint':'')},svg));
+  if(ci){
+    const eLo=Math.exp(LO),eHi=Math.exp(HI);
+    el('rect',{x:tx(LO),y:yT-7,width:tx(HI)-tx(LO),height:14,rx:3,class:'ciband'},svg);
+    el('rect',{x:bx(eLo),y:yB-7,width:bx(eHi)-bx(eLo),height:14,rx:3,class:'ciband'},svg);
+    el('line',{x1:tx(LO),y1:yT,x2:bx(eLo),y2:yB,class:'mapci'},svg); el('line',{x1:tx(HI),y1:yT,x2:bx(eHi),y2:yB,class:'mapci'},svg);
+    T(tx(LNM),26,'mean 0.857','acc','middle');
+    T((tx(LO)+tx(LNM))/2,yT-22,'−0.71','acc','middle'); T((tx(HI)+tx(LNM))/2,yT-22,'+0.71','acc','middle');
+    T(bx(eLo)-3,yB+34,eLo.toFixed(2),'acc','end'); T(bx(GM),yB+34,GM.toFixed(2),'acc','middle'); T(bx(eHi)+3,yB+34,eHi.toFixed(2),'acc','start');
+    T(bx(GM)-4,yB+52,(GM-eLo).toFixed(2)+' below','acc','end'); T(bx(GM)+4,yB+52,(eHi-GM).toFixed(2)+' above','acc','start');
+  }
+  CRP.forEach((v,i)=>{el('circle',{cx:tx(LNV[i]),cy:yT,r:4.5,class:'pdot lnd'},svg);el('circle',{cx:bx(v),cy:yB,r:4.5,class:'pdot'},svg);});
+  el('line',{x1:tx(LNM),y1:yT,x2:bx(GM),y2:yB,class:'mapmean'},svg);
+  el('circle',{cx:tx(LNM),cy:yT,r:7,class:'gmk'},svg); el('circle',{cx:bx(GM),cy:yB,r:7,class:'gmk'},svg);
+  if(!ci){
+    T(tx(LNM),28,'mean of ln values = 0.857','acc','middle');
+    el('rect',{x:bx(AM)-6,y:yB-6,width:12,height:12,transform:`rotate(45 ${bx(AM)} ${yB})`,class:'amk'},svg);
+    T(bx(GM)-6,yB+34,'eˣ → 2.36 geometric mean','acc','start');
+    T(bx(AM)-6,yB+52,'4.22 arithmetic mean','amt','start');
+  }
+}
+mapDiagram(document.getElementById('g-map'),false);
+mapDiagram(document.getElementById('g-map-ci'),true);
+
+/* three-patient slider */
+function mx(){
+  const big=Math.round(10**(+document.getElementById('mx').value/10)); const vals=[1,10,big];
+  const am=(1+10+big)/3, lg=vals.map(Math.log10), ml=(lg[0]+lg[1]+lg[2])/3, gm=10**ml;
+  document.getElementById('mx-v').textContent=big.toLocaleString();
+  document.getElementById('mx-am').textContent=am.toFixed(1);
+  document.getElementById('mx-amw').textContent=`(1 + 10 + ${big}) ÷ 3`;
+  document.getElementById('mx-gm').textContent=gm.toFixed(1);
+  document.getElementById('mx-gmw').textContent=`logs 0, 1, ${lg[2].toFixed(2)} → mean ${ml.toFixed(2)} → 10^${ml.toFixed(2)}`;
+}
+document.getElementById('mx').addEventListener('input',mx); mx();
+routeUpdate();
+
+/* ---------------- tabs ---------------- */
+const TABS=['overview','exp','log10','ln','lab'];
+function openTab(name,scroll){
+  if(!TABS.includes(name))name='overview';
+  document.querySelectorAll('[data-panel]').forEach(p=>p.hidden=p.dataset.panel!==name);
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===name));
+  try{localStorage.setItem('tlab-tab',name)}catch(e){}
+  if(scroll) window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelector('nav.tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-tab]');if(b){openTab(b.dataset.tab,true);try{history.replaceState(null,'','#'+b.dataset.tab)}catch(err){}}});
+let start=(location.hash||'').slice(1); if(!TABS.includes(start)){try{start=localStorage.getItem('tlab-tab')||'overview'}catch(e){start='overview'}}
+openTab(start,false);
+document.querySelectorAll('input.ans').forEach(i=>i.placeholder='0.0000');
+render();
+})();
+</script>
+
+</body></html>
