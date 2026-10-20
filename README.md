@@ -1,6 +1,6 @@
 # Transformation Lab
 
-**Live app:** https://lizferguson5.github.io/transformations/
+**Live app:** [https://lizferguson5.github.io/transformations/](https://lizferguson5.github.io/transformations/#overview)
 
 An interactive lab for BIOL 200 (Violations of Assumptions). Students practise exponential and logarithmic transformations. They then log-transform a skewed medical dataset, check normality before and after, and back-transform their results into the original units. A scientific calculator stays beside the lesson the whole time, so students can see every number being made.
 
