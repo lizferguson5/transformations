@@ -214,6 +214,12 @@ ul.small{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:3px}
   .flow{grid-template-columns:minmax(0,1fr)}
   .farrow{justify-self:center;transform:rotate(90deg)}
 }
+.xy{background:var(--cs,var(--accent-soft));border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;max-width:76ch;font-size:.94rem}
+.xy ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:4px}
+.xy .sym{color:var(--c);font-weight:700}
+.chart .ptlab{font-size:11px;fill:var(--muted)}
+.chart .dotlab{fill:var(--c);font-weight:600}
+td.before{color:var(--muted)}
 .rule{background:var(--cs,var(--accent-soft));border-radius:8px;padding:9px 13px;font-size:.93rem;max-width:72ch}
 .dp{display:inline-block;margin-left:6px;font-size:.7rem;letter-spacing:0;text-transform:none;background:var(--cs,var(--accent-soft));color:var(--c,var(--accent));padding:1px 7px;border-radius:999px;font-weight:700}
 .legend i.lg-x{width:9px;height:9px;border:2px solid var(--c);background:var(--surface);transform:rotate(45deg);border-radius:1px}
@@ -407,12 +413,21 @@ button.calc-fab,button.calc-close{display:none}
 
   <div class="block">
     <div class="step-h"><span class="step-n">Activity</span><h3>Calculate eˣ for x = 1, 1.5, 2 and 2.5, then see them on the graph</h3></div>
-    <p class="prose">Your starting values are the ◇ diamonds on the dotted <b>y = x</b> line: that is where each value sits with no transformation. Type each transformed y into its box and a dot appears straight above or below its diamond, with an arrow showing how far the transformation moved it.</p>
+    <div class="xy">
+      <p><b>Reading the graph:</b> every point is <b>(x, y)</b>. x is how far across; y is how high up.</p>
+      <ul>
+        <li><b>x</b> is your starting value (1, 2, 3…). It never changes.</li>
+        <li><span class="sym">◇</span> <b>Before:</b> each starting value is plotted at <b>(x, x)</b>, so its height is the same number as its x. For x = 2, the diamond is at (2, 2). These diamonds sit on the dotted line y = x.</li>
+        <li><span class="sym dot">●</span> <b>After:</b> when you type your answer, a dot appears at <b>(x, your answer)</b>, so for x = 2 the dot goes at (2, e²). Same x, new height.</li>
+        <li><b>The arrow</b> shows how the transformation changed the value: straight up or down, because only y changes.</li>
+      </ul>
+    </div>
     <p class="rule"><b>Round every answer to 4 decimal places</b>, for example <span class="mono">1.6487</span>. The calculator shows the rounded value under each result, and <b>Use this value</b> rounds it for you.</p>
     <div class="tablewrap"><table class="act" id="t-exp"></table></div>
     <p class="progress" id="pr-exp"></p>
     <div class="chartbox"><svg class="chart" id="g-exp" viewBox="0 0 560 320" role="img" aria-label="Graph of y equals e to the x with your points"></svg></div>
-    <div class="legend"><span><i class="lg-x"></i>Original value (no transformation)</span><span><i class="lg-r"></i>y = x line</span><span><i class="lg-y"></i>Your transformed value</span><span><i class="lg-n"></i>Check this one again</span></div>
+    <div class="legend"><span><i class="lg-x"></i>Before: (x, x)</span><span><i class="lg-r"></i>y = x line (no change)</span><span><i class="lg-y"></i>After: (x, eˣ)</span><span><i class="lg-n"></i>Check this one again</span></div>
+    <p class="small">Same x, new y: a transformation changes the value (the height on this graph), never the x.</p>
     <div class="btnrow">
       <label style="display:flex;gap:8px;align-items:center;font-size:.92rem"><input type="checkbox" id="cmp-exp"> Compare with 2ˣ and 10ˣ</label>
     </div>
@@ -469,12 +484,21 @@ button.calc-fab,button.calc-close{display:none}
 
   <div class="block">
     <div class="step-h"><span class="step-n">Activity</span><h3>Calculate log₁₀(x) for x = 1 to 5, then see them on the graph</h3></div>
-    <p class="prose">Your starting values are the ◇ diamonds on the dotted <b>y = x</b> line: that is where each value sits with no transformation. Type each transformed y into its box and a dot appears straight above or below its diamond, with an arrow showing how far the transformation moved it.</p>
+    <div class="xy">
+      <p><b>Reading the graph:</b> every point is <b>(x, y)</b>. x is how far across; y is how high up.</p>
+      <ul>
+        <li><b>x</b> is your starting value (1, 2, 3…). It never changes.</li>
+        <li><span class="sym">◇</span> <b>Before:</b> each starting value is plotted at <b>(x, x)</b>, so its height is the same number as its x. For x = 2, the diamond is at (2, 2). These diamonds sit on the dotted line y = x.</li>
+        <li><span class="sym dot">●</span> <b>After:</b> when you type your answer, a dot appears at <b>(x, your answer)</b>, so for x = 2 the dot goes at (2, log₁₀(2)). Same x, new height.</li>
+        <li><b>The arrow</b> shows how the transformation changed the value: straight up or down, because only y changes.</li>
+      </ul>
+    </div>
     <p class="rule"><b>Round every answer to 4 decimal places</b>, for example <span class="mono">1.3010</span> (keep the final zero). The calculator shows the rounded value under each result, and <b>Use this value</b> rounds it for you.</p>
     <div class="tablewrap"><table class="act" id="t-log10"></table></div>
     <p class="progress" id="pr-log10"></p>
     <div class="chartbox"><svg class="chart" id="g-log10" viewBox="0 0 560 320" role="img" aria-label="Graph of log base 10 of x with your points"></svg></div>
-    <div class="legend"><span><i class="lg-x"></i>Original value (no transformation)</span><span><i class="lg-r"></i>y = x line</span><span><i class="lg-y"></i>Your transformed value</span><span><i class="lg-n"></i>Check this one again</span></div>
+    <div class="legend"><span><i class="lg-x"></i>Before: (x, x)</span><span><i class="lg-r"></i>y = x line (no change)</span><span><i class="lg-y"></i>After: (x, log₁₀(x))</span><span><i class="lg-n"></i>Check this one again</span></div>
+    <p class="small">Same x, new y: a transformation changes the value (the height on this graph), never the x.</p>
   </div>
 
   <div class="callout try">
@@ -511,12 +535,21 @@ button.calc-fab,button.calc-close{display:none}
 
   <div class="block">
     <div class="step-h"><span class="step-n">Activity</span><h3>Calculate ln(x) for x = 1 to 5, then see them on the graph</h3></div>
-    <p class="prose">Your starting values are the ◇ diamonds on the dotted <b>y = x</b> line: that is where each value sits with no transformation. Type each transformed y into its box and a dot appears straight above or below its diamond, with an arrow showing how far the transformation moved it.</p>
+    <div class="xy">
+      <p><b>Reading the graph:</b> every point is <b>(x, y)</b>. x is how far across; y is how high up.</p>
+      <ul>
+        <li><b>x</b> is your starting value (1, 2, 3…). It never changes.</li>
+        <li><span class="sym">◇</span> <b>Before:</b> each starting value is plotted at <b>(x, x)</b>, so its height is the same number as its x. For x = 2, the diamond is at (2, 2). These diamonds sit on the dotted line y = x.</li>
+        <li><span class="sym dot">●</span> <b>After:</b> when you type your answer, a dot appears at <b>(x, your answer)</b>, so for x = 2 the dot goes at (2, ln(2)). Same x, new height.</li>
+        <li><b>The arrow</b> shows how the transformation changed the value: straight up or down, because only y changes.</li>
+      </ul>
+    </div>
     <p class="rule"><b>Round every answer to 4 decimal places</b>, for example <span class="mono">2.9957</span>. The calculator shows the rounded value under each result, and <b>Use this value</b> rounds it for you.</p>
     <div class="tablewrap"><table class="act" id="t-ln"></table></div>
     <p class="progress" id="pr-ln"></p>
     <div class="chartbox"><svg class="chart" id="g-ln" viewBox="0 0 560 320" role="img" aria-label="Graph of natural log of x with your points"></svg></div>
-    <div class="legend"><span><i class="lg-x"></i>Original value (no transformation)</span><span><i class="lg-r"></i>y = x line</span><span><i class="lg-y"></i>Your transformed value</span><span><i class="lg-n"></i>Check this one again</span></div>
+    <div class="legend"><span><i class="lg-x"></i>Before: (x, x)</span><span><i class="lg-r"></i>y = x line (no change)</span><span><i class="lg-y"></i>After: (x, ln(x))</span><span><i class="lg-n"></i>Check this one again</span></div>
+    <p class="small">Same x, new y: a transformation changes the value (the height on this graph), never the x.</p>
     <div class="btnrow"><label style="display:flex;gap:8px;align-items:center;font-size:.92rem"><input type="checkbox" id="cmp-ln"> Compare with log₁₀(x)</label></div>
   </div>
 
@@ -963,11 +996,11 @@ const ACTS={
 const answers={exp:{},log10:{},ln:{}};
 Object.entries(ACTS).forEach(([key,A])=>{
   const t=document.getElementById('t-'+key);
-  t.innerHTML=`<thead><tr><th>x</th><th>Keys to press</th><th>${A.head}<span class="dp">4 decimal places</span></th><th></th></tr></thead><tbody>`+
-   A.xs.map((x,i)=>`<tr><td class="mono"><b>${x}</b></td><td><span class="keys">${keycaps(A.seq(x))}</span></td>
+  t.innerHTML=`<thead><tr><th>x (start)</th><th>Before: y = x</th><th>Keys to press</th><th>After: ${A.head}<span class="dp">4 decimal places</span></th><th></th></tr></thead><tbody>`+
+   A.xs.map((x,i)=>`<tr><td class="mono"><b>${x}</b></td><td class="mono before">${x}</td><td><span class="keys">${keycaps(A.seq(x))}</span></td>
      <td><input class="ans" id="in-${key}-${i}" inputmode="decimal" autocomplete="off" data-label="${A.head} at x = ${x}"><div class="fb" id="fb-${key}-${i}"></div></td>
      <td><div class="btnrow"><button class="btn small" data-play="${A.seq(x)}">▶ Show me</button><button class="btn small" data-why="${key}-${i}">What does it mean?</button></div></td></tr>
-     <tr class="why" id="why-${key}-${i}" hidden><td></td><td colspan="3"><div class="reveal"></div></td></tr>`).join('')+'</tbody>';
+     <tr class="why" id="why-${key}-${i}" hidden><td></td><td colspan="4"><div class="reveal"></div></td></tr>`).join('')+'</tbody>';
   A.xs.forEach((x,i)=>{
     const inp=document.getElementById(`in-${key}-${i}`), fb=document.getElementById(`fb-${key}-${i}`);
     inp.addEventListener('input',()=>{ const v=parseNum(inp.value); answers[key][i]=isNaN(v)?undefined:v; setFb(fb,judge(v,A.f(x),A.wrongs(x),inp.value)); drawAct(key); progress(key); });
@@ -1001,7 +1034,7 @@ function funcPlot(svg,P,points,extras){
   for(let y=Math.ceil(P.y0/P.yt-1e-9)*P.yt;y<=P.y1+1e-9;y+=P.yt){el('line',{x1:sx(P.x0),x2:sx(P.x1),y1:sy(y),y2:sy(y),class:'grid'},g);const t=el('text',{x:m.l-8,y:sy(y)+4,'text-anchor':'end'},g);t.textContent=tickFmt(y);}
   if(P.x0<=0&&P.x1>=0) el('line',{x1:sx(0),x2:sx(0),y1:sy(P.y0),y2:sy(P.y1),class:'axis'},g);
   if(P.y0<=0&&P.y1>=0) el('line',{x1:sx(P.x0),x2:sx(P.x1),y1:sy(0),y2:sy(0),class:'axis'},g);
-  const xl=el('text',{x:W-m.r,y:H-4,'text-anchor':'end'},g); xl.textContent='x';
+  const xl=el('text',{x:W-m.r,y:H-4,'text-anchor':'end'},g); xl.textContent='x (starting value)';
   const yl=el('text',{x:m.l+6,y:m.t+10},g); yl.textContent='y';
   const clip='clip'+svg.id; const cp=el('clipPath',{id:clip},svg); el('rect',{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b},cp);
   const curve=(fn,cls,label,lx)=>{let d='';const N=300;for(let k=0;k<=N;k++){const x=P.x0+(P.x1-P.x0)*k/N; if(x<=0&&(fn===Math.log||fn===Math.log10))continue; const y=fn(x); if(!isFinite(y))continue; d+=(d?'L':'M')+sx(x).toFixed(1)+','+sy(Math.max(Math.min(y,P.y1+5),P.y0-5)).toFixed(1);} el('path',{d,class:cls,'clip-path':`url(#${clip})`},svg);
@@ -1016,6 +1049,9 @@ function funcPlot(svg,P,points,extras){
     points.forEach(p=>{ if(p.y===undefined||!p.ok)return; const ya=sy(p.x), yb=sy(Math.min(Math.max(p.y,P.y0),P.y1)); const dir=yb>ya?1:-1;
       if(Math.abs(yb-ya)>18) el('line',{x1:sx(p.x),x2:sx(p.x),y1:ya+dir*8,y2:yb-dir*9,class:'move','marker-end':`url(#arr${svg.id})`},svg); });
     P.marks.forEach(x=>{ if(x<P.y0||x>P.y1)return; el('rect',{x:sx(x)-6,y:sy(x)-6,width:12,height:12,transform:`rotate(45 ${sx(x)} ${sy(x)})`,class:'xmark'},svg); });
+    const isExp=P.y0>=0;
+    P.marks.forEach(x=>{ if(x<P.y0||x>P.y1)return; const t=isExp?el('text',{x:sx(x)+8,y:sy(x)+17,'text-anchor':'start',class:'ptlab'},svg):el('text',{x:sx(x)-10,y:sy(x)-8,'text-anchor':'end',class:'ptlab'},svg); t.textContent=`(${tickFmt(x)}, ${tickFmt(x)})`; });
+    points.forEach(p=>{ if(p.y===undefined||!p.ok)return; const yy=Math.min(p.y,P.y1); const t=isExp?el('text',{x:sx(p.x)-12,y:sy(yy)+4,'text-anchor':'end',class:'ptlab dotlab'},svg):(Math.abs(p.y)<0.05?el('text',{x:sx(p.x)+10,y:sy(yy)+18,'text-anchor':'start',class:'ptlab dotlab'},svg):el('text',{x:sx(p.x)-10,y:sy(yy)-9,'text-anchor':'end',class:'ptlab dotlab'},svg)); t.textContent=`(${tickFmt(p.x)}, ${fmtMinus(p.y.toFixed(2))})`; });
   }
   points.forEach(p=>{ if(p.y===undefined)return; const yy=Math.max(Math.min(p.y,P.y1),P.y0); el('circle',{cx:sx(p.x),cy:sy(yy),r:6.5,class:'dot'+(p.ok?'':' wrong')},svg); });
 }
