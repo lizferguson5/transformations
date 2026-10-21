@@ -233,6 +233,10 @@ ol.stages li::before{content:counter(st);font-family:var(--f-mono);font-weight:6
 ol.stages li.done{color:var(--ink)}
 ol.stages li.now{color:var(--ink);background:var(--accent-soft);border-color:var(--accent)}
 ol.stages li.now::before,ol.stages li.done::before{background:var(--accent);color:var(--accent-ink)}
+.chart .brk{fill:none;stroke-width:2}
+.chart .brk.lnb{stroke:var(--ln)} .chart .brk.amb{stroke:var(--exp)}
+.chart text.brkt{font-weight:600;font-size:12px}
+.chart text.brkt.lnb{fill:var(--ln)} .chart text.brkt.amb{fill:var(--exp)}
 .chart .hiring{fill:none;stroke:var(--exp);stroke-width:2.5}
 .chart .pdot.p12{fill:var(--exp);fill-opacity:1}
 .lanes{display:grid;grid-template-columns:minmax(0,1.3fr) auto minmax(0,1fr);gap:10px;align-items:stretch}
@@ -735,7 +739,8 @@ button.calc-fab,button.calc-close{display:none}
         <li>Average them on the log scale: mean = 0.857 (Step 3).</li>
         <li>eˣ carries each patient back down to mg/L. Watch the lines fan out: eˣ stretches the high values far apart.</li>
         <li>eˣ of the log-scale mean lands at 2.36 mg/L. That is the geometric mean (Step 4).</li>
-        <li>The ordinary average of the mg/L values is 4.22. The two high patients (circled), now stretched far to the right, pull it up.</li>
+        <li>The ordinary average of the mg/L values is 4.22, higher than 9 of the 12 patients. The geometric mean (2.36) sits in the middle of the group: 6 patients below it and 6 above.</li>
+        <li>Why the difference? Every value pulls on its mean, on both scales. On the log scale (top) the extremes balance: the lowest patient is 1.77 below the mean and the highest is 2.06 above. In mg/L (bottom) they don't: the highest patient (circled, 18.5) is 14.3 above the arithmetic mean, but the lowest is only 3.8 below. The far-out high values drag the arithmetic mean up much more.</li>
       </ol>
       <div class="mini-ex">
         <h3>Try it: change one patient</h3>
@@ -748,7 +753,7 @@ button.calc-fab,button.calc-close{display:none}
         </div>
         <p class="small" id="mx-note"></p>
       </div>
-      <p class="rule"><b>Key idea:</b> back-transforming the mean of the logs does not give back the ordinary mean. It gives the <b>geometric mean</b>, a typical value that one or two very high patients can't drag upward.</p>
+      <p class="rule"><b>Key idea:</b> back-transforming the mean of the logs does not give back the ordinary mean. It gives the <b>geometric mean</b>, a typical value that a few very high patients can't drag upward nearly as much.</p>
       <details><summary style="cursor:pointer;font-weight:700">For the curious: another way to get the geometric mean</summary>
         <div class="work" id="w-gm2" style="margin-top:8px"></div>
       </details>
@@ -1335,7 +1340,14 @@ function makeMap(svg,ctl,list,mode){
     E.gmLbl=T(bx(GM)-6,yB+34,'eˣ → 2.36 geometric mean','acc','start',gLab);
     E.am=el('rect',{x:bx(AM)-6,y:yB-6,width:12,height:12,transform:`rotate(45 ${bx(AM)} ${yB})`,class:'amk'},gDots);
     E.amLbl=T(bx(AM)-6,yB+52,'4.22 arithmetic mean','amt','start',gLab);
-    E.rings=[9.8,18.5].map(v=>el('circle',{cx:bx(v),cy:yB,r:10,class:'hiring'},gDots));
+    E.rings=[18.5].map(v=>el('circle',{cx:bx(v),cy:yB,r:10,class:'hiring'},gDots));
+    const brk=(x1,x2,y,up,label,cls)=>{const d=up?-8:8; el('path',{d:`M${x1},${y+d} V${y} H${x2} V${y+d}`,class:'brk '+cls},gLab); return T((x1+x2)/2,up?y+20:y-8,label,'brkt '+cls,'middle',gLab);};
+    const lo=Math.min(...LNV),hi=Math.max(...LNV);
+    E.bal=[];
+    const g1=el('g',{},gLab),g2=el('g',{},gLab);
+    [[tx(lo),tx(LNM),(LNM-lo).toFixed(2)+' below'],[tx(LNM),tx(hi),(hi-LNM).toFixed(2)+' above']].forEach(([a,b2,lb])=>{const t=brk(a,b2,yT+18,true,lb,'lnb');});
+    [[bx(0.4),bx(AM),(AM-0.4).toFixed(1)+' below'],[bx(AM),bx(18.5),(18.5-AM).toFixed(1)+' above']].forEach(([a,b2,lb])=>{brk(a,b2,yB-18,false,lb,'amb');});
+    E.bal=[...gLab.querySelectorAll('.brk,.brkt')];
   } else {
     E.bandT=el('rect',{x:tx(LNM),y:yT-7,width:0,height:14,rx:3,class:'ciband'},gBand);
     E.bandB=el('rect',{x:bx(eLo),y:yB-7,width:bx(eHi)-bx(eLo),height:14,rx:3,class:'ciband'},gBand);
@@ -1355,7 +1367,7 @@ function makeMap(svg,ctl,list,mode){
   function reset(){
     op(E.meanTop,mode==='ci'?1:0); op(E.meanTopLbl,mode==='ci'?1:0); op(E.meanBot,0);
     grow(E.meanLine,tx(LNM),yT,bx(GM),yB,0);
-    if(mode==='back'){ E.links.forEach((ln,i)=>{grow(ln,tx(LNV[i]),yT,bx(CRP[i]),yB,0);}); E.bots.forEach(b=>op(b,0)); [E.gmLbl,E.am,E.amLbl,...E.rings].forEach(e=>op(e,0)); }
+    if(mode==='back'){ E.links.forEach((ln,i)=>{grow(ln,tx(LNV[i]),yT,bx(CRP[i]),yB,0);op(ln,1);}); op(E.meanLine,1); E.bots.forEach(b=>op(b,0)); [E.gmLbl,E.am,E.amLbl,...E.rings,...E.bal].forEach(e=>op(e,0)); }
     else { E.links.forEach(ln=>op(ln,0)); E.bandT.setAttribute('x',tx(LNM)); E.bandT.setAttribute('width',0); op(E.bandB,0);
       grow(E.loLine,tx(LO),yT,bx(eLo),yB,0); grow(E.hiLine,tx(HI),yT,bx(eHi),yB,0); [...E.pm,...E.vals,...E.dist].forEach(e=>op(e,0)); }
   }
@@ -1363,7 +1375,8 @@ function makeMap(svg,ctl,list,mode){
     (a,my)=>fade([E.meanTop,E.meanTopLbl],a,my),
     async(a,my)=>{ await Promise.all(E.links.map((ln,i)=>sleep(130*i*a,my).then(()=>my===gen&&tween(550*a,k=>grow(ln,tx(LNV[i]),yT,bx(CRP[i]),yB,k),my)).then(()=>my===gen&&fade([E.bots[i]],a,my,200)))); },
     async(a,my)=>{ await tween(900*a,k=>grow(E.meanLine,tx(LNM),yT,bx(GM),yB,k),my); if(my===gen) await fade([E.meanBot,E.gmLbl],a,my); },
-    (a,my)=>fade([E.am,E.amLbl,...E.rings],a,my,600)
+    (a,my)=>fade([E.am,E.amLbl],a,my,600),
+    async(a,my)=>{ await tween(500*a,k=>{E.links.forEach(ln=>op(ln,1-0.75*k));op(E.meanLine,1-0.8*k);},my); if(my===gen) await fade([...E.rings,...E.bal],a,my,700); }
   ]:[
     (a,my)=>tween(800*a,k=>{E.bandT.setAttribute('x',tx(LNM)-(tx(LNM)-tx(LO))*k);E.bandT.setAttribute('width',(tx(HI)-tx(LO))*k);E.pm.forEach(e=>op(e,k));},my),
     async(a,my)=>{ await Promise.all([tween(900*a,k=>grow(E.loLine,tx(LO),yT,bx(eLo),yB,k),my),tween(900*a,k=>grow(E.meanLine,tx(LNM),yT,bx(GM),yB,k),my),tween(900*a,k=>grow(E.hiLine,tx(HI),yT,bx(eHi),yB,k),my)]); if(my===gen) await fade([E.bandB,E.meanBot,...E.vals],a,my); },
